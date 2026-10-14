@@ -1,0 +1,21 @@
+rules_version = '2';
+
+// Only used when NEXT_PUBLIC_IMAGE_PROVIDER=firebase.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ⚠️ Keep this list in sync with NEXT_PUBLIC_ADMIN_EMAILS in your .env file.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in ['earthside.contact@gmail.com'];
+    }
+
+    match /{folder}/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin()
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+  }
+}

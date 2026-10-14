@@ -1,0 +1,55 @@
+rules_version = '2';
+
+// These rules are the real security boundary: the website UI only hides the
+// dashboard, but the database itself refuses writes from anyone except Della.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ⚠️ Keep this list in sync with NEXT_PUBLIC_ADMIN_EMAILS in your .env file.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in ['earthside.contact@gmail.com'];
+    }
+
+    function isValidArticle(data) {
+      return data.keys().hasAll([
+          'slug', 'title', 'excerpt', 'content', 'coverImageUrl', 'coverImageAlt',
+          'category', 'language', 'status', 'readingMinutes', 'authorName',
+          'createdAt', 'updatedAt', 'publishedAt'
+        ])
+        && data.title is string
+        && data.title.size() >= 5 && data.title.size() <= 160
+        && data.slug is string && data.slug.size() > 0
+        && data.category in ['national', 'international']
+        && data.language in ['id', 'en']
+        && data.status in ['draft', 'published'];
+    }
+
+    function isValidTopicRequest(data) {
+      return data.keys().hasOnly(['email', 'topic', 'description', 'status', 'createdAt'])
+        && data.email is string
+        && data.email.size() <= 254
+        && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && data.topic is string
+        && data.topic.size() >= 3 && data.topic.size() <= 120
+        && data.description is string
+        && data.description.size() >= 10 && data.description.size() <= 1000
+        && data.status == 'new'
+        && data.createdAt == request.time;
+    }
+
+    // Articles: everyone reads published ones, only the admin sees drafts and writes.
+    match /articles/{articleId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow create, update: if isAdmin() && isValidArticle(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Topic requests: anyone can submit one, only the admin can read or manage them.
+    match /topicRequests/{requestId} {
+      allow create: if isValidTopicRequest(request.resource.data);
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
