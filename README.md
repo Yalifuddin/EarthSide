@@ -47,13 +47,34 @@ _Environment Variables_ di Vercel (produksi). Lihat `.env.example` untuk daftar 
 
 ## Keputusan admin: halaman `/admin` + whitelist akun Google
 
-Pembaca **tidak perlu login sama sekali**, karena mereka hanya membaca. Della masuk lewat
-`/id/admin` dengan tombol _Masuk dengan Google_, dan hanya email yang terdaftar
-(`earthside.contact@gmail.com`) yang diizinkan.
+Pembaca **tidak perlu login sama sekali**, karena mereka hanya membaca. Admin masuk lewat
+`/id/admin` dengan tombol _Masuk dengan Google_, dan hanya email yang terdaftar yang diizinkan.
 
 - Halaman publik tetap ringan: kode login/editor tidak ikut ter-download oleh pembaca.
 - Keamanan sesungguhnya ada di **Firestore Security Rules** (`firestore.rules`), jadi walaupun
-  seseorang membuka `/admin`, database tetap menolak tulisan dari akun selain Della.
+  seseorang membuka `/admin`, database tetap menolak tulisan dari akun yang tidak terdaftar.
+
+### Email: mana yang boleh dua akun, mana yang hanya akun resmi
+
+| Kegunaan                                                      | `earthside.contact@gmail.com` | `yalif1710@gmail.com` | Diatur di                                                      |
+| ------------------------------------------------------------- | :---------------------------: | :-------------------: | -------------------------------------------------------------- |
+| Login dashboard `/admin` (tulis, edit, hapus, kelola request) |              ✅               |          ✅           | `NEXT_PUBLIC_ADMIN_EMAILS`, `firestore.rules`, `storage.rules` |
+| Kontak yang tampil di website                                 |              ✅               |          ❌           | `src/config/site.ts` → `contactEmail`                          |
+| Penerima email notifikasi request baru                        |              ✅               |          ❌           | `REQUEST_NOTIFY_EMAIL`                                         |
+| Pengirim balasan ke pembaca (tombol _Balas via email_)        |              ✅               |          ❌           | otomatis membuka Gmail akun `contactEmail`                     |
+| Pemilik akun Firebase, Vercel, Cloudinary, Resend, Turnstile  |              ✅               |  ➕ sebagai anggota   | lihat di bawah                                                 |
+
+Menambah/menghapus admin = ubah **ketiga** tempat di baris pertama (lalu `firebase deploy --only firestore`).
+
+Supaya `yalif1710@gmail.com` ikut bisa membuka _console_ layanan (opsional):
+
+- **Firebase:** Project settings → _Users and permissions_ → **Add member** → role _Editor_.
+- **GitHub:** repo → Settings → _Collaborators_ → **Add people**.
+- **Cloudinary:** Settings → _Users_ → **Invite user** (paket gratis punya kuota user terbatas).
+- **Vercel:** paket gratis (Hobby) hanya satu anggota. Cukup jadikan collaborator di GitHub;
+  setiap _push_ ke repo tetap otomatis ter-deploy.
+- **Resend:** tetap satu akun `earthside.contact@gmail.com` saja (tanpa domain sendiri, Resend
+  hanya bisa mengirim ke email pemilik akun).
 
 ---
 
@@ -68,8 +89,14 @@ npm run dev
 ```
 
 Buka http://localhost:3000. Tanpa konfigurasi Firebase, situs berjalan dalam **mode demo**: ada
-artikel contoh, dan `/id/admin` bisa dicoba dengan login palsu. Perubahan di mode demo hanya
-tersimpan sementara, dan login demo **hanya aktif saat development**.
+artikel contoh, dan `/id/admin` bisa dicoba dengan login palsu. Perubahan di dashboard demo
+langsung tampil di halaman publik, tapi tersimpan di memori server (hilang saat `npm run dev`
+dijalankan ulang). Login demo **hanya aktif saat development**.
+
+**Membuka dari HP/laptop lain di Wi-Fi yang sama:** pakai alamat _Network_ yang muncul di terminal
+(mis. `http://192.168.x.x:3000`). Alamat jaringan lokal sudah diizinkan di `next.config.ts`. Untuk
+login Google lewat alamat itu (setelah Firebase aktif), tambahkan IP-nya di _Firebase →
+Authentication → Settings → Authorized domains_.
 
 | Script                        | Kegunaan                               |
 | ----------------------------- | -------------------------------------- |
@@ -92,8 +119,8 @@ tersimpan sementara, dan login demo **hanya aktif saat development**.
    dukungan, simpan.
 4. **Build → Firestore Database → Create database** → pilih lokasi (mis. `asia-southeast2`
    Jakarta) → mulai di **production mode**.
-5. Email admin sudah diset ke `earthside.contact@gmail.com` di `firestore.rules`,
-   `storage.rules`, dan `.env.example`. Kalau nanti ganti akun, ubah **ketiganya**.
+5. Email admin sudah diset ke `earthside.contact@gmail.com` dan `yalif1710@gmail.com` di
+   `firestore.rules`, `storage.rules`, dan `.env.example` (lihat tabel email di atas).
 6. Deploy rules & index dari terminal:
 
    ```bash

@@ -20,7 +20,7 @@ interface RichTextEditorProps {
 
 /**
  * WYSIWYG editor for article bodies. It is uncontrolled: the parent reads
- * `editor.getJSON()` when saving instead of mirroring every keystroke in state.
+ * the document (see `readDocument`) when saving instead of mirroring every keystroke.
  */
 export function RichTextEditor({
   initialContent,

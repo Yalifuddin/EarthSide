@@ -1,3 +1,4 @@
+import { isAllowedImageSrc } from "@/core/media/image-src";
 import { slugify } from "@/core/shared/slug";
 
 /**
@@ -55,13 +56,12 @@ export function buildExcerpt(text: string, maxLength = 220): string {
 }
 
 const SAFE_LINK_PROTOCOLS = ["http:", "https:", "mailto:"];
-const SAFE_IMAGE_PROTOCOLS = ["https:", "http:"];
 
-function hasSafeProtocol(value: unknown, allowed: string[]): boolean {
+function isSafeLink(value: unknown): boolean {
   if (typeof value !== "string") return false;
-  if (value.startsWith("/")) return true;
+  if (value.startsWith("/") && !value.startsWith("//")) return true;
   try {
-    return allowed.includes(new URL(value).protocol);
+    return SAFE_LINK_PROTOCOLS.includes(new URL(value).protocol);
   } catch {
     return false;
   }
@@ -72,13 +72,11 @@ function hasSafeProtocol(value: unknown, allowed: string[]): boolean {
  * (e.g. `javascript:`) before a document is rendered as HTML.
  */
 export function sanitizeRichText(node: RichTextNode): RichTextNode | null {
-  if (node.type === "image" && !hasSafeProtocol(node.attrs?.src, SAFE_IMAGE_PROTOCOLS)) {
+  if (node.type === "image" && !isAllowedImageSrc(node.attrs?.src)) {
     return null;
   }
 
-  const marks = node.marks?.filter(
-    (mark) => mark.type !== "link" || hasSafeProtocol(mark.attrs?.href, SAFE_LINK_PROTOCOLS),
-  );
+  const marks = node.marks?.filter((mark) => mark.type !== "link" || isSafeLink(mark.attrs?.href));
   const content = node.content
     ?.map(sanitizeRichText)
     .filter((child): child is RichTextNode => child !== null);

@@ -4,11 +4,15 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
 
+    // Accounts that may manage content (dashboard login).
     // ⚠️ Keep this list in sync with NEXT_PUBLIC_ADMIN_EMAILS in your .env file.
     function isAdmin() {
       return request.auth != null
         && request.auth.token.email_verified == true
-        && request.auth.token.email.lower() in ['earthside.contact@gmail.com'];
+        && request.auth.token.email.lower() in [
+          'earthside.contact@gmail.com',
+          'yalif1710@gmail.com'
+        ];
     }
 
     match /{folder}/{fileName} {

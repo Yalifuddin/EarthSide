@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { inputClasses } from "@/components/ui/form-field";
+import { siteConfig } from "@/config/site";
 import {
   TOPIC_REQUEST_STATUSES,
   type TopicRequest,
@@ -14,8 +15,10 @@ import { useAsyncData } from "@/hooks/use-async-data";
 import { formatShortDate, interpolate } from "@/i18n/format";
 import { useI18n } from "@/i18n/i18n-provider";
 import { cn } from "@/lib/cn";
+import { gmailComposeUrl } from "@/lib/gmail";
 import { useAdminServices } from "./admin-auth-provider";
 import { ConfirmDialog } from "./confirm-dialog";
+import { ActionErrorBanner, useActionError } from "./use-action-error";
 import { PanelEmpty, PanelError, PanelLoading } from "./panel-state";
 
 type StatusFilter = "all" | TopicRequestStatus;
@@ -29,25 +32,30 @@ export function RequestsPanel({ onInboxChange }: { onInboxChange?: () => void })
   const requests = useAsyncData(() => requestService.listAll());
   const [filter, setFilter] = useState<StatusFilter>("all");
   const [pendingDelete, setPendingDelete] = useState<TopicRequest | null>(null);
+  const actionError = useActionError();
 
-  async function changeStatus(request: TopicRequest, status: TopicRequestStatus) {
-    requests.mutate((list) =>
-      list.map((item) => (item.id === request.id ? { ...item, status } : item)),
-    );
-    try {
-      await requestService.updateStatus(request.id, status);
-    } catch {
-      await requests.reload();
-    } finally {
+  const changeStatus = (request: TopicRequest, status: TopicRequestStatus) =>
+    actionError.run(async () => {
+      // Optimistic: show the new status immediately, roll back by reloading on failure.
+      requests.mutate((list) =>
+        list.map((item) => (item.id === request.id ? { ...item, status } : item)),
+      );
+      try {
+        await requestService.updateStatus(request.id, status);
+      } catch (error) {
+        await requests.reload();
+        throw error;
+      } finally {
+        onInboxChange?.();
+      }
+    });
+
+  const remove = (request: TopicRequest) =>
+    actionError.run(async () => {
+      await requestService.delete(request.id);
+      requests.mutate((list) => list.filter((item) => item.id !== request.id));
       onInboxChange?.();
-    }
-  }
-
-  async function remove(request: TopicRequest) {
-    await requestService.delete(request.id);
-    requests.mutate((list) => list.filter((item) => item.id !== request.id));
-    onInboxChange?.();
-  }
+    });
 
   if (requests.status === "loading" && !requests.data) return <PanelLoading />;
   if (requests.status === "error" && !requests.data)
@@ -59,6 +67,7 @@ export function RequestsPanel({ onInboxChange }: { onInboxChange?: () => void })
 
   return (
     <>
+      <ActionErrorBanner message={actionError.message} onDismiss={actionError.dismiss} />
       <div className="mb-5 flex flex-wrap gap-2">
         {filters.map((option) => {
           const count =
@@ -81,6 +90,11 @@ export function RequestsPanel({ onInboxChange }: { onInboxChange?: () => void })
           );
         })}
       </div>
+
+      <p className="mb-5 flex items-center gap-2 text-sm text-ink/60">
+        <Mail className="size-4 shrink-0 text-leaf" aria-hidden />
+        {interpolate(dict.admin.replyFrom, { email: siteConfig.contactEmail })}
+      </p>
 
       {visible.length === 0 ? (
         <PanelEmpty message={dict.admin.noRequests} />
@@ -126,7 +140,12 @@ interface RequestCardProps {
 
 function RequestCard({ request, onStatusChange, onDelete }: RequestCardProps) {
   const { locale, dict } = useI18n();
-  const replyHref = `mailto:${request.email}?subject=${encodeURIComponent(`EarthSide: ${request.topic}`)}`;
+  // Replies always go out from the official address, whoever is signed in.
+  const replyHref = gmailComposeUrl({
+    from: siteConfig.contactEmail,
+    to: request.email,
+    subject: `EarthSide: ${request.topic}`,
+  });
 
   return (
     <article className="flex h-full flex-col rounded-3xl bg-white/75 p-5 ring-1 ring-forest/5">
@@ -158,6 +177,9 @@ function RequestCard({ request, onStatusChange, onDelete }: RequestCardProps) {
         </select>
         <a
           href={replyHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={interpolate(dict.admin.replyFrom, { email: siteConfig.contactEmail })}
           className="inline-flex h-10 items-center gap-2 rounded-full px-3 text-sm font-bold text-forest hover:bg-forest/8"
         >
           <Mail className="size-4" aria-hidden />

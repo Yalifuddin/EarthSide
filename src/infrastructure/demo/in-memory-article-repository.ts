@@ -1,5 +1,6 @@
 import type { Article, ArticleRecord, ArticleSummary } from "@/core/articles/article";
 import type { ArticleRepository, PublishedArticlesQuery } from "@/core/articles/article-repository";
+import { createId } from "@/core/shared/id";
 import type { Page } from "@/core/shared/page";
 
 function toSummary(article: Article): ArticleSummary {
@@ -56,7 +57,7 @@ export class InMemoryArticleRepository implements ArticleRepository {
   }
 
   async create(record: ArticleRecord): Promise<string> {
-    const id = crypto.randomUUID();
+    const id = createId();
     const now = new Date();
     this.articles.set(id, { ...record, id, createdAt: now, updatedAt: now });
     return id;

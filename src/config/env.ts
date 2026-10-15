@@ -5,6 +5,8 @@
  * them into the client bundle — do not refactor these into dynamic lookups.
  */
 
+import { siteConfig } from "./site";
+
 export type ImageProvider = "cloudinary" | "firebase";
 
 const firebase = {
@@ -23,6 +25,11 @@ function parseEmailList(raw: string | undefined): string[] {
     .filter(Boolean);
 }
 
+function resolveAdminEmails(raw: string | undefined): string[] {
+  const configured = parseEmailList(raw);
+  return configured.length ? configured : [...siteConfig.defaultAdminEmails];
+}
+
 function parseImageProvider(raw: string | undefined): ImageProvider {
   return raw === "firebase" ? "firebase" : "cloudinary";
 }
@@ -32,7 +39,7 @@ export const env = {
   isFirebaseConfigured: Boolean(
     firebase.apiKey && firebase.authDomain && firebase.projectId && firebase.appId,
   ),
-  adminEmails: parseEmailList(process.env.NEXT_PUBLIC_ADMIN_EMAILS),
+  adminEmails: resolveAdminEmails(process.env.NEXT_PUBLIC_ADMIN_EMAILS),
   imageProvider: parseImageProvider(process.env.NEXT_PUBLIC_IMAGE_PROVIDER),
   /** Cloudflare Turnstile site key (public); pair it with TURNSTILE_SECRET_KEY. */
   turnstileSiteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "",

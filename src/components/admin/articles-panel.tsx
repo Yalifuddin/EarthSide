@@ -16,6 +16,7 @@ import { routes } from "@/lib/routes";
 import { refreshPublishedContent } from "@/server/actions";
 import { useAdminServices } from "./admin-auth-provider";
 import { ConfirmDialog } from "./confirm-dialog";
+import { ActionErrorBanner, useActionError } from "./use-action-error";
 import { PanelEmpty, PanelError, PanelLoading } from "./panel-state";
 
 export function ArticlesPanel() {
@@ -23,19 +24,22 @@ export function ArticlesPanel() {
   const { articles: articleService } = useAdminServices();
   const articles = useAsyncData(() => articleService.listAll());
   const [pendingDelete, setPendingDelete] = useState<ArticleSummary | null>(null);
+  const actionError = useActionError();
 
-  async function toggleStatus(article: ArticleSummary) {
-    const next = article.status === "published" ? "draft" : "published";
-    await articleService.setStatus(article.id, next);
-    await refreshPublishedContent();
-    await articles.reload();
-  }
+  const toggleStatus = (article: ArticleSummary) =>
+    actionError.run(async () => {
+      const next = article.status === "published" ? "draft" : "published";
+      await articleService.setStatus(article.id, next);
+      await refreshPublishedContent();
+      await articles.reload();
+    });
 
-  async function remove(article: ArticleSummary) {
-    await articleService.delete(article.id);
-    await refreshPublishedContent();
-    articles.mutate((list) => list.filter((item) => item.id !== article.id));
-  }
+  const remove = (article: ArticleSummary) =>
+    actionError.run(async () => {
+      await articleService.delete(article.id);
+      await refreshPublishedContent();
+      articles.mutate((list) => list.filter((item) => item.id !== article.id));
+    });
 
   if (articles.status === "loading" && !articles.data) return <PanelLoading />;
   if (articles.status === "error" && !articles.data)
@@ -44,6 +48,7 @@ export function ArticlesPanel() {
 
   return (
     <>
+      <ActionErrorBanner message={actionError.message} onDismiss={actionError.dismiss} />
       <ul className="space-y-3">
         <AnimatePresence initial={false}>
           {articles.data.map((article) => (

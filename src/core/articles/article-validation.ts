@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isAllowedImageSrc } from "@/core/media/image-src";
 import { extractPlainText, type RichTextNode } from "@/core/rich-text/rich-text";
 import { toFieldErrors, type ValidationResult } from "@/core/shared/validation";
 import {
@@ -12,16 +13,6 @@ export const ARTICLE_LIMITS = {
   title: { min: 5, max: 160 },
   coverImageAlt: { max: 200 },
 } as const;
-
-/** Absolute http(s)/blob URLs, or paths served by this site (e.g. `/demo/x.svg`). */
-function isImageUrl(value: string): boolean {
-  if (value.startsWith("/") && !value.startsWith("//")) return true;
-  try {
-    return ["https:", "http:", "blob:"].includes(new URL(value).protocol);
-  } catch {
-    return false;
-  }
-}
 
 const richTextSchema = z.custom<RichTextNode>(
   (value) =>
@@ -42,7 +33,7 @@ const articleInputSchema = z.object({
   language: z.enum(ARTICLE_LANGUAGES, { error: "language_invalid" }),
   status: z.enum(ARTICLE_STATUSES, { error: "status_invalid" }),
   content: richTextSchema,
-  coverImageUrl: z.string().refine(isImageUrl, { error: "cover_url_invalid" }).nullable(),
+  coverImageUrl: z.string().refine(isAllowedImageSrc, { error: "cover_url_invalid" }).nullable(),
   coverImageAlt: z
     .string()
     .trim()

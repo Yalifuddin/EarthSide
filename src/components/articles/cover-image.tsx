@@ -13,9 +13,9 @@ interface CoverImageProps {
   className?: string;
 }
 
-/** Local SVGs and in-browser previews can't go through the image optimizer. */
+/** Local SVGs and inline (demo) images can't go through the image optimizer. */
 function needsUnoptimized(src: string) {
-  return src.endsWith(".svg") || src.startsWith("blob:");
+  return src.endsWith(".svg") || src.startsWith("blob:") || src.startsWith("data:");
 }
 
 /**

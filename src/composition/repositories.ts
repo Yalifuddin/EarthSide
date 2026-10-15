@@ -11,6 +11,9 @@ import { FirestoreTopicRequestRepository } from "@/infrastructure/firebase/fires
 /**
  * Composition root for persistence: the only place that knows which concrete
  * repositories exist. Everything else depends on the `core` interfaces.
+ *
+ * In demo mode the data lives in this server process's memory: the dashboard
+ * and public pages share it, and it resets whenever the dev server restarts.
  */
 export const isDemoMode = !env.isFirebaseConfigured;
 

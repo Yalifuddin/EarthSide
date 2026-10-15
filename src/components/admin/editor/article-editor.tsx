@@ -24,13 +24,15 @@ import {
   estimateReadingMinutes,
   type RichTextNode,
 } from "@/core/rich-text/rich-text";
+import { PermissionDeniedError } from "@/core/shared/errors";
 import { ValidationError, type FieldErrors } from "@/core/shared/validation";
 import { formatDateTime, interpolate } from "@/i18n/format";
 import { useI18n } from "@/i18n/i18n-provider";
 import { cn } from "@/lib/cn";
+import { readDocument } from "@/lib/rich-text/read-document";
 import { routes } from "@/lib/routes";
 import { refreshPublishedContent } from "@/server/actions";
-import { useAdminServices } from "../admin-auth-provider";
+import { useAdminAuth } from "../admin-auth-provider";
 import { ArticlePreviewDialog, type PreviewArticle } from "./article-preview-dialog";
 import { CoverUploader } from "./cover-uploader";
 import { RichTextEditor } from "./rich-text-editor";
@@ -46,7 +48,9 @@ interface PreviewState {
   html: string;
 }
 type SaveState =
-  { phase: "idle" } | { phase: "saving"; status: ArticleStatus } | { phase: "failed" };
+  | { phase: "idle" }
+  | { phase: "saving"; status: ArticleStatus }
+  | { phase: "failed"; reason: "denied" | "unknown" };
 
 function initialValues(article?: Article): FormValues {
   return {
@@ -62,7 +66,8 @@ function initialValues(article?: Article): FormValues {
 export function ArticleEditor({ article }: { article?: Article }) {
   const { locale, dict } = useI18n();
   const t = dict.admin.editor;
-  const { articles } = useAdminServices();
+  const { services, user } = useAdminAuth();
+  const { articles } = services;
   const router = useRouter();
   const idPrefix = useId();
 
@@ -81,11 +86,15 @@ export function ArticleEditor({ article }: { article?: Article }) {
     valuesRef.current = values;
   });
 
+  function currentDocument() {
+    return editorRef.current ? readDocument(editorRef.current) : EMPTY_DOCUMENT;
+  }
+
   function markChanged() {
     setDirty(true);
     draft.schedule(() => ({
       values: valuesRef.current,
-      content: editorRef.current?.getJSON() ?? EMPTY_DOCUMENT,
+      content: currentDocument(),
     }));
   }
 
@@ -127,7 +136,7 @@ export function ArticleEditor({ article }: { article?: Article }) {
     const input: ArticleInput = {
       ...values,
       status,
-      content: editorRef.current?.getJSON() ?? EMPTY_DOCUMENT,
+      content: currentDocument(),
     };
 
     setSave({ phase: "saving", status });
@@ -143,9 +152,11 @@ export function ArticleEditor({ article }: { article?: Article }) {
       if (error instanceof ValidationError) {
         setErrors(error.errors as FieldErrors<ArticleInput>);
         setSave({ phase: "idle" });
+      } else if (error instanceof PermissionDeniedError) {
+        setSave({ phase: "failed", reason: "denied" });
       } else {
         console.error(error);
-        setSave({ phase: "failed" });
+        setSave({ phase: "failed", reason: "unknown" });
       }
     }
   }
@@ -286,7 +297,9 @@ export function ArticleEditor({ article }: { article?: Article }) {
             role="alert"
             className="rounded-2xl bg-rose-soft px-4 py-3 text-sm font-semibold text-rose-deep"
           >
-            {t.saveFailed}
+            {save.reason === "denied"
+              ? interpolate(t.permissionDenied, { email: user?.email ?? "" })
+              : t.saveFailed}
           </p>
         )}
 

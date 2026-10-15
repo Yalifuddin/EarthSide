@@ -20,6 +20,7 @@ import type { ArticleRepository, PublishedArticlesQuery } from "@/core/articles/
 import type { Page } from "@/core/shared/page";
 import { toArticle, toArticleFields, toArticleSummary } from "./article-mapper";
 import { COLLECTIONS, getDb } from "./firebase-app";
+import { translateFirebaseErrors } from "./firebase-errors";
 
 /** Cursor = the `publishedAt` of the last item, in epoch milliseconds. */
 function decodeCursor(cursor: string | null | undefined): Timestamp | null {
@@ -78,22 +79,26 @@ export class FirestoreArticleRepository implements ArticleRepository {
   }
 
   async create(record: ArticleRecord): Promise<string> {
-    const ref = await addDoc(this.articles, {
-      ...toArticleFields(record),
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
+    const ref = await translateFirebaseErrors(() =>
+      addDoc(this.articles, {
+        ...toArticleFields(record),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      }),
+    );
     return ref.id;
   }
 
   async update(id: string, record: ArticleRecord): Promise<void> {
-    await updateDoc(doc(this.articles, id), {
-      ...toArticleFields(record),
-      updatedAt: serverTimestamp(),
-    });
+    await translateFirebaseErrors(() =>
+      updateDoc(doc(this.articles, id), {
+        ...toArticleFields(record),
+        updatedAt: serverTimestamp(),
+      }),
+    );
   }
 
   async delete(id: string): Promise<void> {
-    await deleteDoc(doc(this.articles, id));
+    await translateFirebaseErrors(() => deleteDoc(doc(this.articles, id)));
   }
 }

@@ -155,14 +155,18 @@ export const en: Dictionary = {
     unavailableTitle: "Dashboard not active yet",
     unavailableBody:
       "Connect Firebase first (see the README) so Della can sign in and write articles.",
-    demoNotice: "Demo mode: changes are only kept temporarily in this tab.",
+    demoNotice:
+      "Demo mode: changes show up on the site right away, but are lost when the server restarts.",
     backToSite: "View site",
     tabs: { articles: "Articles", requests: "Requests" },
     newArticle: "New article",
     noArticles: "No articles yet. Let's write the first one!",
+    replyFrom:
+      "Replies to readers are sent from {email}. If Gmail asks, sign in with that account first.",
     newRequestsBadge: "{count} new requests",
     noRequests: "No requests yet.",
     loadFailed: "Couldn't load data.",
+    actionFailed: "That action failed. Please try again in a moment.",
     retry: "Try again",
     columns: { status: "Status", updated: "Updated" },
     status: { draft: "Draft", published: "Published" },
@@ -207,6 +211,8 @@ export const en: Dictionary = {
       publish: "Publish",
       update: "Save changes",
       saving: "Saving…",
+      permissionDenied:
+        "The database rules don't allow {email} to save yet. Add this email to firestore.rules, then run: firebase deploy --only firestore:rules",
       saveFailed: "Couldn't save. Please try again.",
       uploadFailed: "Couldn't upload the image.",
       imageTooLarge: "Images can be at most 5 MB.",

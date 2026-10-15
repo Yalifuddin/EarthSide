@@ -45,6 +45,10 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
       className={`${marcellus.variable} ${nunito.variable} ${caveat.variable}`}
     >
       <body className="min-h-dvh overflow-x-clip">
+        {/* Entrance animations start hidden; without JavaScript, show everything as-is. */}
+        <noscript>
+          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <I18nProvider locale={locale} dict={dict}>
           <MotionProvider>{children}</MotionProvider>
         </I18nProvider>

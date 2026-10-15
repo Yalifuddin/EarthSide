@@ -20,6 +20,7 @@ import {
 } from "@/core/topic-requests/topic-request";
 import type { TopicRequestRepository } from "@/core/topic-requests/topic-request-repository";
 import { COLLECTIONS, getDb } from "./firebase-app";
+import { translateFirebaseErrors } from "./firebase-errors";
 
 function toStatus(value: unknown): TopicRequestStatus {
   return TOPIC_REQUEST_STATUSES.includes(value as TopicRequestStatus)
@@ -61,10 +62,10 @@ export class FirestoreTopicRequestRepository implements TopicRequestRepository {
   }
 
   async updateStatus(id: string, status: TopicRequestStatus): Promise<void> {
-    await updateDoc(doc(this.requests, id), { status });
+    await translateFirebaseErrors(() => updateDoc(doc(this.requests, id), { status }));
   }
 
   async delete(id: string): Promise<void> {
-    await deleteDoc(doc(this.requests, id));
+    await translateFirebaseErrors(() => deleteDoc(doc(this.requests, id)));
   }
 }

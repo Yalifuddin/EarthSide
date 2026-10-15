@@ -156,14 +156,18 @@ export const id = {
     unavailableTitle: "Dashboard belum aktif",
     unavailableBody:
       "Hubungkan Firebase terlebih dahulu (lihat README) agar Della bisa masuk dan menulis artikel.",
-    demoNotice: "Mode demo: perubahan hanya tersimpan sementara di tab ini.",
+    demoNotice:
+      "Mode demo: perubahan langsung tampil di situs, tapi hilang saat server dijalankan ulang.",
     backToSite: "Lihat situs",
     tabs: { articles: "Artikel", requests: "Request" },
     newArticle: "Artikel baru",
     noArticles: "Belum ada artikel. Yuk tulis yang pertama!",
+    replyFrom:
+      "Balasan ke pembaca dikirim dari {email}. Kalau Gmail minta, masuk dulu dengan akun itu.",
     newRequestsBadge: "{count} request baru",
     noRequests: "Belum ada request masuk.",
     loadFailed: "Gagal memuat data.",
+    actionFailed: "Aksi gagal. Coba lagi sebentar lagi.",
     retry: "Coba lagi",
     columns: { status: "Status", updated: "Diperbarui" },
     status: { draft: "Draf", published: "Terbit" },
@@ -208,6 +212,8 @@ export const id = {
       publish: "Terbitkan",
       update: "Simpan perubahan",
       saving: "Menyimpan…",
+      permissionDenied:
+        "Akun {email} belum diizinkan menyimpan oleh aturan database. Tambahkan email ini di firestore.rules, lalu jalankan: firebase deploy --only firestore:rules",
       saveFailed: "Gagal menyimpan. Coba lagi.",
       uploadFailed: "Gagal mengunggah gambar.",
       imageTooLarge: "Ukuran gambar maksimal 5 MB.",
