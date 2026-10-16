@@ -1,6 +1,7 @@
 {
   "projects": {
-    "staging-earthside": "earthside-3ed47"
+    "default": "earthside-3ed47",
+    "production": "earthside-3ed47"
   },
   "targets": {},
   "etags": {}

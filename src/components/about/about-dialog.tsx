@@ -3,8 +3,8 @@
 import { BookOpen, HeartHandshake, Lightbulb, X, type LucideIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { Logo } from "@/components/layout/logo";
-import { Dialog } from "@/components/ui/dialog";
 import { ButtonLink } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
 import { useI18n } from "@/i18n/i18n-provider";
 import { routes, SECTION_IDS } from "@/lib/routes";
 

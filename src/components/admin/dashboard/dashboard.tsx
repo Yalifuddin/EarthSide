@@ -3,14 +3,14 @@
 import { Inbox, Newspaper, Plus } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { useAdminAuth } from "@/components/admin/shell/admin-auth-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { interpolate } from "@/i18n/format";
 import { useAsyncData } from "@/hooks/use-async-data";
+import { interpolate } from "@/i18n/format";
 import { useI18n } from "@/i18n/i18n-provider";
 import { cn } from "@/lib/cn";
 import { routes } from "@/lib/routes";
-import { useAdminAuth } from "./admin-auth-provider";
 import { ArticlesPanel } from "./articles-panel";
 import { RequestsPanel } from "./requests-panel";
 

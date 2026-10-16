@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AdminShell } from "@/components/admin/admin-shell";
+import { AdminShell } from "@/components/admin/shell/admin-shell";
 import { getDictionary } from "@/i18n/get-dictionary";
 
 export async function generateMetadata(): Promise<Metadata> {

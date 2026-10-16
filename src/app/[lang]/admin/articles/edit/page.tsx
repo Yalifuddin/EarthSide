@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { EditArticleScreen } from "@/components/admin/editor/edit-article-screen";
-import { PanelLoading } from "@/components/admin/panel-state";
+import { PanelLoading } from "@/components/admin/shared/panel-state";
 
 /** Rendered only after client-side sign-in, so there is no server UI to validate. */
 export const instant = false;

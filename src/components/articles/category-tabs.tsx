@@ -7,7 +7,7 @@ import { useI18n } from "@/i18n/i18n-provider";
 import { cn } from "@/lib/cn";
 
 export type CategoryFilter = "all" | ArticleCategory;
-export const CATEGORY_FILTERS: CategoryFilter[] = ["all", ...ARTICLE_CATEGORIES];
+const CATEGORY_FILTERS: CategoryFilter[] = ["all", ...ARTICLE_CATEGORIES];
 
 interface CategoryTabsProps {
   value: CategoryFilter;

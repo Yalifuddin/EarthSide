@@ -1,3 +1,4 @@
+import { Leaf } from "@/components/ui/leaf";
 import { cn } from "@/lib/cn";
 
 /** Fixed positions/timings (not random) so server and client render identically. */
@@ -10,19 +11,6 @@ const LEAVES = [
   { left: "82%", delay: "14s", duration: "24s", size: 20, color: "text-leaf" },
   { left: "92%", delay: "5s", duration: "22s", size: 14, color: "text-moss" },
 ];
-
-export function Leaf({ className, size = 24 }: { className?: string; size?: number }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} className={className} aria-hidden>
-      <path
-        d="M4 20 C 4 10, 10 4, 20 4 C 20 14, 14 20, 4 20 Z"
-        fill="currentColor"
-        fillOpacity="0.85"
-      />
-      <path d="M4 20 L 14 10" stroke="#f7f4d5" strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 /** Leaves drifting down the hero, purely decorative. */
 export function FloatingLeaves() {

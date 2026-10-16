@@ -1,12 +1,13 @@
 import { Container } from "@/components/ui/container";
+import { Leaf } from "@/components/ui/leaf";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { SECTION_IDS } from "@/lib/routes";
-import { ContactCard } from "./contact-card";
-import { Leaf } from "./floating-leaves";
+import { EmailCard } from "./email-card";
+import { InstagramCard } from "./instagram-card";
 
-/** Section 4 — how to reach Della. */
+/** Section 4 — how to reach Della: email and Instagram. */
 export async function ContactSection() {
   const { dict } = await getDictionary();
 
@@ -32,9 +33,14 @@ export async function ContactSection() {
           title={dict.contact.title}
           subtitle={dict.contact.subtitle}
         />
-        <Reveal delay={0.1} className="mt-12">
-          <ContactCard />
-        </Reveal>
+        <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
+          <Reveal delay={0.1} className="h-full">
+            <EmailCard />
+          </Reveal>
+          <Reveal delay={0.2} className="h-full">
+            <InstagramCard dict={dict} />
+          </Reveal>
+        </div>
       </Container>
     </section>
   );

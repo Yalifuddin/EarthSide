@@ -4,6 +4,10 @@ import { Eye, EyeOff, ExternalLink, Pencil, Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
+import { ActionErrorBanner, useActionError } from "@/components/admin/shared/action-error";
+import { ConfirmDialog } from "@/components/admin/shared/confirm-dialog";
+import { PanelEmpty, PanelError, PanelLoading } from "@/components/admin/shared/panel-state";
+import { useAdminServices } from "@/components/admin/shell/admin-auth-provider";
 import { CategoryBadge } from "@/components/articles/category-badge";
 import { CoverImage } from "@/components/articles/cover-image";
 import { LanguageBadge } from "@/components/articles/language-badge";
@@ -14,10 +18,6 @@ import { formatShortDate, interpolate } from "@/i18n/format";
 import { useI18n } from "@/i18n/i18n-provider";
 import { routes } from "@/lib/routes";
 import { refreshPublishedContent } from "@/server/actions";
-import { useAdminServices } from "./admin-auth-provider";
-import { ConfirmDialog } from "./confirm-dialog";
-import { ActionErrorBanner, useActionError } from "./use-action-error";
-import { PanelEmpty, PanelError, PanelLoading } from "./panel-state";
 
 export function ArticlesPanel() {
   const { dict } = useI18n();

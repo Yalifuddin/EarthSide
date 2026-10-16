@@ -3,10 +3,10 @@
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor, type Editor } from "@tiptap/react";
 import { useState } from "react";
+import { useAdminServices } from "@/components/admin/shell/admin-auth-provider";
 import type { RichTextNode } from "@/core/rich-text/rich-text";
 import { useI18n } from "@/i18n/i18n-provider";
 import { richTextExtensions } from "@/lib/rich-text/extensions";
-import { useAdminServices } from "../admin-auth-provider";
 import { EditorToolbar } from "./editor-toolbar";
 import { describeUploadError } from "./image-errors";
 

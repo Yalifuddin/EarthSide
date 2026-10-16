@@ -6,12 +6,13 @@ import { useId, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { FormField, inputClasses } from "@/components/ui/form-field";
 import { Spinner } from "@/components/ui/spinner";
+import { env } from "@/config/env";
 import type { FieldErrors } from "@/core/shared/validation";
 import type { TopicRequestInput } from "@/core/topic-requests/topic-request";
 import { TOPIC_REQUEST_LIMITS } from "@/core/topic-requests/topic-request-validation";
 import { useI18n } from "@/i18n/i18n-provider";
-import { env } from "@/config/env";
 import { submitTopicRequest } from "@/server/actions";
+import { PaperPlane } from "./paper-plane";
 import { TurnstileWidget, type TurnstileHandle } from "./turnstile-widget";
 
 type Status = "idle" | "submitting" | "success";
@@ -207,27 +208,5 @@ function SuccessMessage({ onReset }: { onReset: () => void }) {
         {dict.request.sendAnother}
       </Button>
     </motion.div>
-  );
-}
-
-export function PaperPlane({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 120 90" fill="none" className={className} aria-hidden>
-      <path
-        d="M6 44 L112 6 L78 84 L56 56 Z"
-        className="fill-cream"
-        stroke="currentColor"
-        strokeWidth="3.5"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M112 6 L56 56 L52 80 L66 64"
-        stroke="currentColor"
-        strokeWidth="3.5"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
-      <path d="M6 44 L56 56" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-    </svg>
   );
 }

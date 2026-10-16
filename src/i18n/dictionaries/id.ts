@@ -65,7 +65,6 @@ export const id = {
     loading: "Memuat…",
     readingTime: "{minutes} menit baca",
     by: "oleh {author}",
-    writtenIn: "Ditulis dalam {language}",
     backToHome: "Kembali ke beranda",
     archiveTitle: "Semua Artikel",
     archiveSubtitle: "Jelajahi semua cerita tentang Bumi kita.",
@@ -105,11 +104,15 @@ export const id = {
   contact: {
     eyebrow: "Kontak",
     title: "Say hi ke Della",
-    subtitle: "Mau kolaborasi, kasih masukan, atau sekadar menyapa? Kirim email kapan saja.",
+    subtitle:
+      "Mau kolaborasi, kasih masukan, atau sekadar menyapa? Kirim email atau sapa kami di Instagram.",
     emailLabel: "Email",
     sendEmail: "Kirim email",
     copy: "Salin alamat",
     copied: "Tersalin!",
+    instagramLabel: "Instagram",
+    instagramHint: "Kabar artikel terbaru dan cerita kecil di balik layar.",
+    followInstagram: "Ikuti di Instagram",
   },
   footer: {
     tagline: "Cerita kecil tentang rumah kita yang besar.",
@@ -137,8 +140,15 @@ export const id = {
     body: "Kami tidak menemukan halaman yang kamu cari.",
     back: "Kembali ke beranda",
   },
-  demo: {
-    banner: "Mode demo — data contoh ditampilkan karena Firebase belum dikonfigurasi.",
+  environment: {
+    siteDemo: "Mode demo — data contoh ditampilkan karena Firebase belum dikonfigurasi.",
+    siteSandbox: "Situs {env} — datanya terpisah dari situs live, bebas dicoba-coba.",
+    adminDemo:
+      "Mode demo: perubahan langsung tampil di situs local, tapi hilang saat server dijalankan ulang.",
+    adminSandbox:
+      "Lingkungan {env} · database “{project}” — terpisah dari situs live, aman untuk coba-coba.",
+    adminLiveFromLocal:
+      "Hati-hati: ini versi local tapi terhubung ke database LIVE (“{project}”). Semua perubahan langsung tampil di situs.",
   },
   admin: {
     greeting: "Hai, {name}!",
@@ -155,9 +165,7 @@ export const id = {
     deniedBody: "Akun {email} tidak punya akses ke dashboard ini.",
     unavailableTitle: "Dashboard belum aktif",
     unavailableBody:
-      "Hubungkan Firebase terlebih dahulu (lihat README) agar Della bisa masuk dan menulis artikel.",
-    demoNotice:
-      "Mode demo: perubahan langsung tampil di situs, tapi hilang saat server dijalankan ulang.",
+      "Hubungkan Firebase terlebih dahulu (lihat docs/setup.md) agar Della bisa masuk dan menulis artikel.",
     backToSite: "Lihat situs",
     tabs: { articles: "Artikel", requests: "Request" },
     newArticle: "Artikel baru",

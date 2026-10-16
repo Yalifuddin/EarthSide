@@ -4,11 +4,11 @@ import { Menu, Search, X } from "lucide-react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
+import { AboutTrigger } from "@/components/about/about-context";
 import { siteConfig } from "@/config/site";
 import { useI18n } from "@/i18n/i18n-provider";
 import { cn } from "@/lib/cn";
 import { routes, SECTION_IDS } from "@/lib/routes";
-import { AboutTrigger } from "@/components/landing/about-context";
 import { LanguageSwitcher } from "./language-switcher";
 import { Logo } from "./logo";
 

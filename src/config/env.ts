@@ -9,6 +9,13 @@ import { siteConfig } from "./site";
 
 export type ImageProvider = "cloudinary" | "firebase";
 
+/**
+ * Which deployment this is. Each one should point at its own Firebase project:
+ * `development` (local) and `preview` use the dev project, `production` the live one.
+ */
+const APP_ENVS = ["development", "preview", "production"] as const;
+export type AppEnv = (typeof APP_ENVS)[number];
+
 const firebase = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? "",
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "",
@@ -30,11 +37,17 @@ function resolveAdminEmails(raw: string | undefined): string[] {
   return configured.length ? configured : [...siteConfig.defaultAdminEmails];
 }
 
+function parseAppEnv(raw: string | undefined): AppEnv {
+  if (APP_ENVS.includes(raw as AppEnv)) return raw as AppEnv;
+  return process.env.NODE_ENV === "production" ? "production" : "development";
+}
+
 function parseImageProvider(raw: string | undefined): ImageProvider {
   return raw === "firebase" ? "firebase" : "cloudinary";
 }
 
 export const env = {
+  appEnv: parseAppEnv(process.env.NEXT_PUBLIC_APP_ENV),
   firebase,
   isFirebaseConfigured: Boolean(
     firebase.apiKey && firebase.authDomain && firebase.projectId && firebase.appId,

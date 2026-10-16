@@ -3,8 +3,8 @@
 import { ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useId, useState, useTransition } from "react";
-import { Leaf } from "@/components/landing/floating-leaves";
 import { Button, ButtonLink } from "@/components/ui/button";
+import { Leaf } from "@/components/ui/leaf";
 import { Spinner } from "@/components/ui/spinner";
 import type { ArticleSummary } from "@/core/articles/article";
 import type { Page } from "@/core/shared/page";

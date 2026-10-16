@@ -33,7 +33,7 @@ export function extractPlainText(node: RichTextNode): string {
   return (isBlockContainer ? parts.join(BLOCK_SEPARATOR) : parts.join("")).trim();
 }
 
-export function countWords(text: string): number {
+function countWords(text: string): number {
   const words = text.trim().split(/\s+/).filter(Boolean);
   return words.length;
 }
@@ -85,7 +85,7 @@ export function sanitizeRichText(node: RichTextNode): RichTextNode | null {
 }
 
 /** A table of contents is only worth showing once an article has a few sections. */
-export const MIN_HEADINGS_FOR_TOC = 2;
+const MIN_HEADINGS_FOR_TOC = 2;
 
 export function hasTableOfContents(headings: HeadingAnchor[]): boolean {
   return headings.length >= MIN_HEADINGS_FOR_TOC;

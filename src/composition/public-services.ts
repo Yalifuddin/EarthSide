@@ -2,16 +2,16 @@ import "server-only";
 import { serverEnv } from "@/config/server-env";
 import { siteConfig } from "@/config/site";
 import { ArticleQueryService } from "@/core/articles/article-query-service";
+import { NoHumanVerifier, SlidingWindowRateLimiter, SpamGuard } from "@/core/spam/spam-guard";
 import {
   BestEffortNotifier,
   SilentNotifier,
   type TopicRequestNotifier,
 } from "@/core/topic-requests/topic-request-notifier";
-import { NoHumanVerifier, SlidingWindowRateLimiter, SpamGuard } from "@/core/spam/spam-guard";
 import { TopicRequestSubmissionService } from "@/core/topic-requests/topic-request-service";
+import { DEFAULT_LOCALE } from "@/i18n/config";
 import { TurnstileVerifier } from "@/infrastructure/cloudflare/turnstile-verifier";
 import { ResendTopicRequestNotifier } from "@/infrastructure/resend/resend-topic-request-notifier";
-import { DEFAULT_LOCALE } from "@/i18n/config";
 import { routes } from "@/lib/routes";
 import { getArticleRepository, getTopicRequestRepository } from "./repositories";
 

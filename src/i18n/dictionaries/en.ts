@@ -65,7 +65,6 @@ export const en: Dictionary = {
     loading: "Loading…",
     readingTime: "{minutes} min read",
     by: "by {author}",
-    writtenIn: "Written in {language}",
     backToHome: "Back to home",
     archiveTitle: "All Articles",
     archiveSubtitle: "Explore every story about our Earth.",
@@ -104,11 +103,15 @@ export const en: Dictionary = {
   contact: {
     eyebrow: "Contact",
     title: "Say hi to Della",
-    subtitle: "Want to collaborate, share feedback, or just say hello? Send an email anytime.",
+    subtitle:
+      "Want to collaborate, share feedback, or just say hello? Send an email or find us on Instagram.",
     emailLabel: "Email",
     sendEmail: "Send an email",
     copy: "Copy address",
     copied: "Copied!",
+    instagramLabel: "Instagram",
+    instagramHint: "New-article updates and little behind-the-scenes stories.",
+    followInstagram: "Follow on Instagram",
   },
   footer: {
     tagline: "Small stories about our big home.",
@@ -136,8 +139,16 @@ export const en: Dictionary = {
     body: "We couldn't find the page you were looking for.",
     back: "Back to home",
   },
-  demo: {
-    banner: "Demo mode — sample data is shown because Firebase isn't configured yet.",
+  environment: {
+    siteDemo: "Demo mode — sample data is shown because Firebase isn't configured yet.",
+    siteSandbox:
+      "{env} site — its data is separate from the live site, so feel free to experiment.",
+    adminDemo:
+      "Demo mode: changes show up on the local site right away, but are lost when the server restarts.",
+    adminSandbox:
+      "{env} environment · database “{project}” — separate from the live site, safe to experiment.",
+    adminLiveFromLocal:
+      "Careful: this is a local build connected to the LIVE database (“{project}”). Every change shows up on the site.",
   },
   admin: {
     greeting: "Hi, {name}!",
@@ -154,9 +165,7 @@ export const en: Dictionary = {
     deniedBody: "The account {email} doesn't have access to this dashboard.",
     unavailableTitle: "Dashboard not active yet",
     unavailableBody:
-      "Connect Firebase first (see the README) so Della can sign in and write articles.",
-    demoNotice:
-      "Demo mode: changes show up on the site right away, but are lost when the server restarts.",
+      "Connect Firebase first (see docs/setup.md) so Della can sign in and write articles.",
     backToSite: "View site",
     tabs: { articles: "Articles", requests: "Requests" },
     newArticle: "New article",

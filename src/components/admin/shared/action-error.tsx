@@ -2,10 +2,10 @@
 
 import { X } from "lucide-react";
 import { useCallback, useState } from "react";
+import { useAdminAuth } from "@/components/admin/shell/admin-auth-provider";
 import { PermissionDeniedError } from "@/core/shared/errors";
 import { interpolate } from "@/i18n/format";
 import { useI18n } from "@/i18n/i18n-provider";
-import { useAdminAuth } from "./admin-auth-provider";
 
 /**
  * Runs a dashboard action and turns a failure into a readable message instead

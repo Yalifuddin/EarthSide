@@ -1,6 +1,6 @@
 import { Compass } from "lucide-react";
-import { Leaf } from "@/components/landing/floating-leaves";
 import { ButtonLink } from "@/components/ui/button";
+import { Leaf } from "@/components/ui/leaf";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { routes } from "@/lib/routes";
 

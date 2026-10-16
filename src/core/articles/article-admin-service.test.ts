@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { InMemoryArticleRepository } from "@/infrastructure/demo/in-memory-article-repository";
 import { ValidationError } from "@/core/shared/validation";
+import { InMemoryArticleRepository } from "@/infrastructure/demo/in-memory-article-repository";
 import type { ArticleInput } from "./article";
 import { ArticleAdminService } from "./article-admin-service";
 

@@ -5,11 +5,13 @@ import { ArrowLeft, Check, Eye, History, Send } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { useAdminAuth } from "@/components/admin/shell/admin-auth-provider";
 import { Button } from "@/components/ui/button";
 import { ChoiceGroup } from "@/components/ui/choice-group";
 import { Container } from "@/components/ui/container";
 import { FormField, inputClasses } from "@/components/ui/form-field";
 import { Spinner } from "@/components/ui/spinner";
+import { siteConfig } from "@/config/site";
 import {
   ARTICLE_CATEGORIES,
   ARTICLE_LANGUAGES,
@@ -18,7 +20,6 @@ import {
   type ArticleStatus,
 } from "@/core/articles/article";
 import { ARTICLE_LIMITS } from "@/core/articles/article-validation";
-import { siteConfig } from "@/config/site";
 import {
   EMPTY_DOCUMENT,
   estimateReadingMinutes,
@@ -32,7 +33,6 @@ import { cn } from "@/lib/cn";
 import { readDocument } from "@/lib/rich-text/read-document";
 import { routes } from "@/lib/routes";
 import { refreshPublishedContent } from "@/server/actions";
-import { useAdminAuth } from "../admin-auth-provider";
 import { ArticlePreviewDialog, type PreviewArticle } from "./article-preview-dialog";
 import { CoverUploader } from "./cover-uploader";
 import { RichTextEditor } from "./rich-text-editor";

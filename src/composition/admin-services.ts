@@ -7,8 +7,8 @@ import { ValidatingImageUploader, type ImageUploader } from "@/core/media/image-
 import type { TopicRequestInbox } from "@/core/topic-requests/topic-request-repository";
 import { TopicRequestInboxService } from "@/core/topic-requests/topic-request-service";
 import { CloudinaryImageUploader } from "@/infrastructure/cloudinary/cloudinary-image-uploader";
-import { DEMO_ADMIN, DemoAuthGateway } from "@/infrastructure/demo/demo-auth-gateway";
 import { DataUrlImageUploader } from "@/infrastructure/demo/data-url-image-uploader";
+import { DEMO_ADMIN, DemoAuthGateway } from "@/infrastructure/demo/demo-auth-gateway";
 import {
   DemoStoreArticleWriter,
   DemoStoreTopicRequestInbox,
@@ -39,7 +39,7 @@ function createImageUploader(): ImageUploader {
   if (isDemoMode) return new DataUrlImageUploader();
   return env.imageProvider === "firebase"
     ? new FirebaseStorageImageUploader()
-    : new CloudinaryImageUploader(env.cloudinary);
+    : new CloudinaryImageUploader({ ...env.cloudinary, environment: env.appEnv });
 }
 
 function createArticleWriter(): ArticleWriter {

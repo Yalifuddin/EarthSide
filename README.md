@@ -1,245 +1,210 @@
+<div align="center">
+
+<img src="docs/screenshots/banner.webp" alt="EarthSide — small stories about our big home" width="100%" />
+
 # EarthSide 🌍
 
-> Cerita kecil tentang rumah kita yang besar.
+**Small stories about our big home.**
 
-EarthSide adalah ruang baca tentang isu lingkungan nasional dan internasional, untuk semua umur
-dengan fokus ke anak muda. Pembaca cuma membaca (tanpa like/komentar). Hanya **Della** yang bisa
-menulis artikel, lewat dashboard admin.
+A bilingual reading space about environmental issues — from the river near your home to the ice at the poles —
+written in plain, friendly language for young readers.
 
-| Section           | Isi                                                                                                                         |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| 1 · Hero          | Logo besar + judul, **setengah bumi interaktif** (klik → _About us_), preview 3 berita terbaru (1 besar + 2 kartu lengkung) |
-| 2 · Artikel       | Kumpulan artikel Della, filter **Nasional / Internasional**, link ke arsip lengkap                                          |
-| 3 · Request topik | Form email + topik + deskripsi singkat → masuk ke dashboard Della (+ email notifikasi, opsional)                            |
-| 4 · Kontak        | `earthside.contact@gmail.com` (kirim email / salin alamat)                                                                  |
+![Next.js](https://img.shields.io/badge/Next.js-16-0a3323?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19-105666?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-366544?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-839958?logo=tailwindcss&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-Firestore_%2B_Auth-d3968c?logo=firebase&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-Vitest-a8655b?logo=vitest&logoColor=white)
 
-**Untuk pembaca:** dua bahasa (ID/EN), link _Tentang_ di navbar & footer, pencarian artikel,
-penanda bahasa artikel, daftar isi otomatis, _reading progress bar_, artikel terkait dari kategori
-yang sama, tombol kembali ke atas, placeholder untuk artikel tanpa gambar (atau gambar yang rusak),
-dan animasi yang menghormati setelan _reduce motion_.
+[Features](#-features) · [Screenshots](#-screenshots) · [Quick start](#-quick-start) · [Architecture](#-architecture) · [Docs](#-documentation)
 
-**Untuk Della:** editor rich text, pilihan kategori & bahasa artikel, pratinjau sebelum terbit,
-autosave draf di browser, badge jumlah request baru, dan email notifikasi request.
-
-**Teknis:** SEO (`sitemap.xml`, `robots.txt`, gambar preview saat link dibagikan), status 404 yang
-benar, anti-spam berlapis (honeypot, rate limit, Cloudflare Turnstile), dan Vercel Analytics.
+</div>
 
 ---
 
-## ✅ Checklist langkah eksternal
+## 🌱 About
 
-Semua akun di bawah **gratis**. Sebaiknya daftar memakai `earthside.contact@gmail.com` supaya semua
-ada di satu akun Della.
+EarthSide is the personal publication of **Della**: a landing page and archive of articles about
+**national 🇮🇩 and international 🌏 environmental issues**. It's built for everyone, with a
+focus on teenagers and young adults — so the tone is light, the design is playful, and nothing
+gets in the way of reading.
 
-| #   | Layanan                                                                     | Wajib?                          | Untuk apa                                      |
-| --- | --------------------------------------------------------------------------- | ------------------------------- | ---------------------------------------------- |
-| 1   | [GitHub](https://github.com)                                                | Wajib                           | Menyimpan kode, dihubungkan ke Vercel          |
-| 2   | [Firebase](https://console.firebase.google.com)                             | Wajib                           | Database artikel & request, login Google Della |
-| 3   | [Cloudinary](https://cloudinary.com)                                        | Wajib (kalau mau upload gambar) | Menyimpan gambar sampul & gambar artikel       |
-| 4   | [Vercel](https://vercel.com)                                                | Wajib                           | Hosting website + statistik pengunjung         |
-| 5   | [Resend](https://resend.com)                                                | Opsional                        | Email ke Della tiap ada request baru           |
-| 6   | [Cloudflare Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) | Opsional                        | Anti-spam di form request                      |
+- **Readers just read.** No accounts, no likes, no comments — only stories (and a share button).
+- **One author, one dashboard.** Articles are written in a private, Google-sign-in dashboard.
+- **Readers still have a voice.** Anyone can suggest a topic for a future article.
 
-Langkah detailnya ada di bawah. Semua kunci disalin ke `.env.local` (lokal) dan ke
-_Environment Variables_ di Vercel (produksi). Lihat `.env.example` untuk daftar lengkapnya.
+## ✨ Features
 
----
+<table>
+<tr>
+<td width="50%" valign="top">
 
-## Keputusan admin: halaman `/admin` + whitelist akun Google
+### For readers
 
-Pembaca **tidak perlu login sama sekali**, karena mereka hanya membaca. Admin masuk lewat
-`/id/admin` dengan tombol _Masuk dengan Google_, dan hanya email yang terdaftar yang diizinkan.
+- 🌍 **Interactive half globe** — tap it to open _About us_
+- 📰 **Latest news** up front, the full **archive** with National / International filters
+- 🔎 **Search**, **table of contents**, reading progress & reading time
+- 🇮🇩 / 🇬🇧 **Bilingual interface**, plus a badge showing each article's language
+- 💌 **Topic requests** with email, topic and a short description
+- ♿ Accessible, responsive, and respectful of _reduced motion_
 
-- Halaman publik tetap ringan: kode login/editor tidak ikut ter-download oleh pembaca.
-- Keamanan sesungguhnya ada di **Firestore Security Rules** (`firestore.rules`), jadi walaupun
-  seseorang membuka `/admin`, database tetap menolak tulisan dari akun yang tidak terdaftar.
+</td>
+<td width="50%" valign="top">
 
-### Email: mana yang boleh dua akun, mana yang hanya akun resmi
+### For the author
 
-| Kegunaan                                                      | `earthside.contact@gmail.com` | `yalif1710@gmail.com` | Diatur di                                                      |
-| ------------------------------------------------------------- | :---------------------------: | :-------------------: | -------------------------------------------------------------- |
-| Login dashboard `/admin` (tulis, edit, hapus, kelola request) |              ✅               |          ✅           | `NEXT_PUBLIC_ADMIN_EMAILS`, `firestore.rules`, `storage.rules` |
-| Kontak yang tampil di website                                 |              ✅               |          ❌           | `src/config/site.ts` → `contactEmail`                          |
-| Penerima email notifikasi request baru                        |              ✅               |          ❌           | `REQUEST_NOTIFY_EMAIL`                                         |
-| Pengirim balasan ke pembaca (tombol _Balas via email_)        |              ✅               |          ❌           | otomatis membuka Gmail akun `contactEmail`                     |
-| Pemilik akun Firebase, Vercel, Cloudinary, Resend, Turnstile  |              ✅               |  ➕ sebagai anggota   | lihat di bawah                                                 |
+- ✍️ **Rich-text editor** with images, headings, quotes and links
+- 👀 **Preview** exactly what readers will see before publishing
+- 💾 **Drafts & local autosave** — closing the tab doesn't lose work
+- 📥 **Request inbox** with status, badges and one-click Gmail replies
+- 🔔 Optional **email notifications** for new requests
+- 🧪 **Separate dev & live data**, clearly labelled in the dashboard
 
-Menambah/menghapus admin = ubah **ketiga** tempat di baris pertama (lalu `firebase deploy --only firestore`).
+</td>
+</tr>
+</table>
 
-Supaya `yalif1710@gmail.com` ikut bisa membuka _console_ layanan (opsional):
+**Under the hood:** server-rendered and cached pages that refresh the moment an article is saved,
+SEO (sitemap, robots, social preview image), real 404s, layered spam protection (honeypot, rate
+limit, Cloudflare Turnstile), and page analytics.
 
-- **Firebase:** Project settings → _Users and permissions_ → **Add member** → role _Editor_.
-- **GitHub:** repo → Settings → _Collaborators_ → **Add people**.
-- **Cloudinary:** Settings → _Users_ → **Invite user** (paket gratis punya kuota user terbatas).
-- **Vercel:** paket gratis (Hobby) hanya satu anggota. Cukup jadikan collaborator di GitHub;
-  setiap _push_ ke repo tetap otomatis ter-deploy.
-- **Resend:** tetap satu akun `earthside.contact@gmail.com` saja (tanpa domain sendiri, Resend
-  hanya bisa mengirim ke email pemilik akun).
+## 📸 Screenshots
 
----
+| Home                                                         | About us                                                         |
+| ------------------------------------------------------------ | ---------------------------------------------------------------- |
+| ![Home page with the half globe](docs/screenshots/hero.webp) | ![About dialog](docs/screenshots/about.webp)                     |
+| **Article collection**                                       | **Reading an article**                                           |
+| ![Article grid](docs/screenshots/articles.webp)              | ![Article with table of contents](docs/screenshots/article.webp) |
+| **Request a topic**                                          | **Author dashboard**                                             |
+| ![Topic request form](docs/screenshots/request.webp)         | ![Dashboard](docs/screenshots/dashboard.webp)                    |
 
-## Menjalankan secara lokal
+<p align="center">
+  <img src="docs/screenshots/editor.webp" alt="Article editor" width="68%" />
+  &nbsp;
+  <img src="docs/screenshots/mobile.webp" alt="Mobile home page" width="22%" />
+</p>
 
-Butuh Node.js 20.19+ (disarankan 22 atau 24).
+## 🧰 Tech stack
+
+| Layer     | Choice                                                                   |
+| --------- | ------------------------------------------------------------------------ |
+| Framework | [Next.js 16](https://nextjs.org) (App Router, Cache Components, Proxy)   |
+| UI        | React 19, Tailwind CSS 4, [Motion](https://motion.dev), Lucide icons     |
+| Editor    | [Tiptap 3](https://tiptap.dev) (shared schema for editing and rendering) |
+| Data      | Firebase Firestore (Lite SDK) + security rules                           |
+| Auth      | Firebase Authentication — Google sign-in, email allow-list               |
+| Media     | Cloudinary (unsigned uploads) or Firebase Storage                        |
+| Extras    | Resend (email), Cloudflare Turnstile (anti-spam), Vercel Analytics       |
+| Quality   | TypeScript strict, Zod, Vitest, ESLint, Prettier                         |
+
+## 🚀 Quick start
+
+> Requires **Node.js 20.19+** (22 or 24 recommended).
 
 ```bash
+git clone https://github.com/Yalifuddin/EarthSide.git
+cd EarthSide
 npm install
-cp .env.example .env.local   # isi nanti; boleh dibiarkan kosong untuk mode demo
 npm run dev
 ```
 
-Buka http://localhost:3000. Tanpa konfigurasi Firebase, situs berjalan dalam **mode demo**: ada
-artikel contoh, dan `/id/admin` bisa dicoba dengan login palsu. Perubahan di dashboard demo
-langsung tampil di halaman publik, tapi tersimpan di memori server (hilang saat `npm run dev`
-dijalankan ulang). Login demo **hanya aktif saat development**.
+Open <http://localhost:3000>. With no configuration the site runs in **demo mode**: sample
+articles are shown and `/en/admin` lets you try the dashboard with a fake sign-in (development only).
 
-**Membuka dari HP/laptop lain di Wi-Fi yang sama:** pakai alamat _Network_ yang muncul di terminal
-(mis. `http://192.168.x.x:3000`). Alamat jaringan lokal sudah diizinkan di `next.config.ts`. Untuk
-login Google lewat alamat itu (setelah Firebase aktif), tambahkan IP-nya di _Firebase →
-Authentication → Settings → Authorized domains_.
+To connect real services, copy `.env.example` to `.env.development.local` and follow the
+**[setup guide](docs/setup.md)**.
 
-| Script                        | Kegunaan                               |
-| ----------------------------- | -------------------------------------- |
-| `npm run dev`                 | Server development                     |
-| `npm run build` / `npm start` | Build & jalankan versi production      |
-| `npm test`                    | Unit test (Vitest) untuk logika domain |
-| `npm run lint`                | ESLint                                 |
-| `npm run typecheck`           | Generate tipe route + cek TypeScript   |
-| `npm run format`              | Rapikan kode dengan Prettier           |
+### Environments
 
----
+Each environment has its **own Firebase project**, so experiments never reach the live site.
 
-## 1 · Firebase (wajib)
+| Environment     | Runs with                       | Config file / place                                       | Data                       |
+| --------------- | ------------------------------- | --------------------------------------------------------- | -------------------------- |
+| **Development** | `npm run dev`                   | `.env.development.local`                                  | Dev project (or demo data) |
+| **Preview**     | Vercel preview deployments      | Vercel → _Preview_ variables                              | Dev project                |
+| **Production**  | Vercel production / `npm start` | Vercel → _Production_ variables · `.env.production.local` | Live project               |
 
-1. Buka [Firebase Console](https://console.firebase.google.com) → **Add project** → beri nama
-   (mis. `earthside`). Google Analytics boleh dimatikan.
-2. **Project settings → General → Your apps → ikon `</>` (Web)** → daftarkan app, lalu salin
-   nilai `firebaseConfig` ke variabel `NEXT_PUBLIC_FIREBASE_*` di `.env.local`.
-3. **Build → Authentication → Get started → Sign-in method → Google → Enable**, pilih email
-   dukungan, simpan.
-4. **Build → Firestore Database → Create database** → pilih lokasi (mis. `asia-southeast2`
-   Jakarta) → mulai di **production mode**.
-5. Email admin sudah diset ke `earthside.contact@gmail.com` dan `yalif1710@gmail.com` di
-   `firestore.rules`, `storage.rules`, dan `.env.example` (lihat tabel email di atas).
-6. Deploy rules & index dari terminal:
+The dashboard always shows which database you're editing — and warns loudly if a local build
+is pointed at the live one.
 
-   ```bash
-   npm install -g firebase-tools
-   firebase login                 # login dengan akun pemilik project
-   firebase use --add             # pilih project tadi
-   firebase deploy --only firestore
-   ```
+### Scripts
 
-7. Setelah deploy ke Vercel (langkah 4): **Authentication → Settings → Authorized domains → Add
-   domain**, lalu masukkan domain Vercel-mu (mis. `earthside.vercel.app`).
+| Command                        | What it does                                   |
+| ------------------------------ | ---------------------------------------------- |
+| `npm run dev`                  | Start the development server                   |
+| `npm run build` / `npm start`  | Production build / serve it                    |
+| `npm test`                     | Unit tests (domain logic)                      |
+| `npm run lint` · `typecheck`   | ESLint · route types + TypeScript              |
+| `npm run format`               | Format with Prettier                           |
+| `npm run firebase:deploy:dev`  | Deploy Firestore rules & indexes to dev        |
+| `npm run firebase:deploy:prod` | Deploy Firestore rules & indexes to production |
 
-## 2 · Cloudinary (upload gambar)
+## 🏛 Architecture
 
-1. Daftar di [cloudinary.com](https://cloudinary.com). **Cloud name** ada di Dashboard → isi
-   `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`.
-2. **Settings (ikon gerigi) → Upload → Upload presets → Add upload preset** → _Signing mode:_
-   **Unsigned**, simpan. Nama preset → isi `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`.
+The code follows a layered, _clean architecture_ style: dependencies only point inward, and
+framework or vendor code is plugged in at the edges.
 
-> Alternatif: `NEXT_PUBLIC_IMAGE_PROVIDER=firebase` memakai Firebase Storage. Untuk project baru,
-> Storage butuh paket **Blaze** (ada kuota gratis, tapi perlu kartu). Deploy rule-nya dengan
-> `firebase deploy --only storage`.
+```mermaid
+flowchart LR
+  subgraph UI["app/ + components/ (Next.js, React)"]
+    Pages[Pages & layouts]
+    Dashboard[Admin dashboard]
+  end
+  subgraph Server["server/"]
+    Queries["Cached queries<br/>'use cache' + tags"]
+    Actions[Server actions]
+  end
+  subgraph Core["core/ — pure TypeScript"]
+    Services[Use cases<br/>ArticleQueryService · ArticleAdminService<br/>TopicRequest services · SpamGuard]
+    Ports[[Ports<br/>ArticleReader / Writer · ImageUploader<br/>AuthGateway · Notifier · HumanVerifier]]
+  end
+  subgraph Infra["infrastructure/ — adapters"]
+    Firebase[(Firestore · Auth)]
+    Cloudinary[(Cloudinary)]
+    Resend[(Resend)]
+    Demo[(In-memory demo)]
+  end
+  Composition{{composition/<br/>picks the adapters}}
 
-## 3 · Resend: email notifikasi request (opsional)
-
-1. Daftar di [resend.com](https://resend.com) **dengan `earthside.contact@gmail.com`**.
-2. **API Keys → Create API Key** (permission: _Sending access_) → isi `RESEND_API_KEY`.
-3. Biarkan `RESEND_FROM=EarthSide <onboarding@resend.dev>`. Tanpa domain sendiri, Resend hanya
-   bisa mengirim ke email yang dipakai mendaftar, dan itu memang tujuan kita.
-   Kalau nanti punya domain (mis. `earthside.id`), verifikasi di _Domains_ lalu ganti `RESEND_FROM`.
-
-Email notifikasi berisi topik & deskripsi, dan tombol _Reply_-nya langsung ke email pembaca.
-Kalau kunci kosong, fitur ini mati dengan sendirinya (request tetap masuk dashboard).
-
-## 4 · Vercel: hosting & statistik
-
-1. Push repo ini ke GitHub.
-2. Di [vercel.com](https://vercel.com) → **Add New → Project** → import repo.
-3. Sebelum _Deploy_, buka **Environment Variables** dan isi semua nilai dari `.env.local`.
-   Set `NEXT_PUBLIC_SITE_URL` ke URL produksi (mis. `https://earthside.vercel.app`).
-4. Setelah deploy: **Project → Analytics → Enable** (gratis untuk paket Hobby). Statistik halaman
-   paling banyak dibaca akan muncul di sana.
-5. Jangan lupa langkah 1.7 (Authorized domains di Firebase).
-
-## 5 · Cloudflare Turnstile: anti-spam (opsional)
-
-1. Daftar/masuk di [Cloudflare](https://dash.cloudflare.com) → **Turnstile → Add widget**.
-2. Isi nama, tambahkan domain (`earthside.vercel.app`, dan `localhost` untuk uji lokal), mode
-   **Managed**.
-3. Salin **Site Key** → `NEXT_PUBLIC_TURNSTILE_SITE_KEY` dan **Secret Key** → `TURNSTILE_SECRET_KEY`.
-
-Tanpa Turnstile, form tetap dilindungi honeypot dan batas 5 request per 10 menit per alamat IP.
-
----
-
-## Arsitektur
-
-Kode disusun berlapis (_clean architecture_). Ketergantungan hanya mengarah **ke dalam**:
-UI → service (use case) → interface. Implementasi Firebase dkk. dipasang dari luar.
+  Pages --> Queries --> Services
+  Pages --> Actions --> Services
+  Dashboard --> Services
+  Services --> Ports
+  Composition -.wires.-> Services
+  Composition -.chooses.-> Infra
+  Infra -.implements.-> Ports
+```
 
 ```
 src/
-├── core/                 ← Domain & use case. Murni TypeScript, tidak kenal Next.js/Firebase.
-│   ├── articles/         entity, validasi (zod), port repository, query/admin service, pencarian
-│   ├── topic-requests/   entity, validasi, port, service submit & inbox, port notifier
-│   ├── spam/             SpamGuard: honeypot + rate limiter + port HumanVerifier
-│   ├── auth/             port AuthGateway + AdminPolicy (whitelist email)
-│   ├── media/            port ImageUploader + decorator validasi file
-│   ├── rich-text/        tipe dokumen + util (teks polos, excerpt, waktu baca, sanitasi, anchor heading)
-│   └── shared/           validasi, slug, pagination
-├── infrastructure/       ← Adapter yang mengimplementasikan port di core
-│   ├── firebase/         Firestore (Lite), Auth Google, Storage
-│   ├── cloudinary/       uploader gambar
-│   ├── resend/           email notifikasi request
-│   ├── cloudflare/       verifikasi Turnstile
-│   └── demo/             repository in-memory + data contoh (mode demo & test)
-├── composition/          ← Composition root: satu-satunya tempat memilih implementasi
-├── server/               ← Query ber-cache ("use cache"), server actions, registry slug untuk Proxy
-├── i18n/                 ← Kamus id/en, provider, format tanggal
-├── lib/                  ← Helper UI (routes, ekstensi Tiptap bersama, renderer HTML)
-├── components/           ← UI: ui/ (primitif), layout/, landing/, articles/, admin/
-├── proxy.ts              ← Redirect bahasa + status 404 untuk artikel yang tidak ada
-└── app/[lang]/           ← Route: (site)/ untuk publik, admin/ untuk dashboard
+├── app/[lang]/        Routes — (site)/ for readers, admin/ for the dashboard
+├── components/        UI, grouped by feature: landing/ · articles/ · about/ · admin/ · layout/ · ui/
+├── core/              Domain entities, validation, use cases and ports (no framework code)
+├── infrastructure/    Firebase, Cloudinary, Resend, Turnstile and demo adapters
+├── composition/       The only place that decides which adapters are used
+├── server/            Cached read models, server actions, Proxy helpers
+├── i18n/              Indonesian & English dictionaries, formatting
+├── lib/ · hooks/      Small shared helpers
+└── proxy.ts           Locale redirects and real 404s for unknown articles
 ```
 
-Contoh penerapan SOLID:
+Read more in **[docs/architecture.md](docs/architecture.md)**.
 
-- **S**: tiap service punya satu tanggung jawab (`ArticleQueryService` untuk pembaca,
-  `ArticleAdminService` untuk penulis); komponen UI kecil dan fokus.
-- **O**: fitur baru masuk lewat implementasi baru, bukan mengubah yang lama: uploader gambar,
-  notifier email, verifier anti-spam. Tombol toolbar editor berupa daftar deklaratif.
-- **L**: repository in-memory dan Firestore bisa saling menggantikan (dipakai di demo & test).
-- **I**: port dipisah (`ArticleReader` vs `ArticleWriter`, `TopicRequestSubmitter` vs
-  `TopicRequestInbox`), jadi halaman publik tidak punya akses menulis.
-- **D**: service bergantung pada interface; implementasi konkret disuntikkan di `composition/`.
-  Decorator (`ValidatingImageUploader`, `BestEffortNotifier`) menambah perilaku tanpa mengubah kelas.
+## 📚 Documentation
 
-Alur data:
+| Document                                     | For                                                         |
+| -------------------------------------------- | ----------------------------------------------------------- |
+| [docs/setup.md](docs/setup.md)               | Connecting Firebase, Cloudinary, Vercel and optional extras |
+| [docs/architecture.md](docs/architecture.md) | How the code is organised, and why                          |
+| [docs/design/](docs/design)                  | Original logo, moodboard and sketches                       |
 
-- **Halaman publik** membaca artikel di server lewat fungsi ber-`"use cache"`. Setiap kali Della
-  menyimpan, server action `refreshPublishedContent` meng-_expire_ cache, jadi artikel baru langsung
-  tampil tanpa membebani Firestore.
-- **Dashboard** berjalan di browser: login Google → token otomatis dikirim ke Firestore → rules
-  memastikan hanya admin yang bisa menulis.
-- **Proxy** mengecek slug artikel ke daftar artikel terbit (di-cache 1 menit). Slug yang tidak
-  ada diarahkan ke halaman 404 statis, sehingga status HTTP-nya benar-benar 404.
-- Isi artikel disimpan sebagai JSON Tiptap, lalu dirender menjadi HTML di server memakai ekstensi
-  yang sama dengan editor, setelah URL berbahaya dibersihkan.
+## 💌 Contact
 
----
+Questions, ideas or collaborations:
 
-## Catatan & batasan
+- ✉️ **[earthside.contact@gmail.com](mailto:earthside.contact@gmail.com)**
+- 📸 Instagram **[@earthside.journal](https://www.instagram.com/earthside.journal)**
 
-- Pencarian berjalan di memori atas daftar artikel terbit (maks. 500). Cukup untuk blog pribadi;
-  kalau arsip sudah ribuan artikel, ganti ke layanan pencarian seperti Algolia.
-- Rate limit request disimpan per server instance; cukup untuk penyalahgunaan ringan.
-- Autosave draf disimpan di browser yang dipakai Della (bukan di database).
-- Menghapus artikel tidak menghapus gambarnya di Cloudinary (upload _unsigned_ tidak bisa
-  menghapus). Bersihkan manual di Media Library kalau perlu.
-- Teks _About us_ ada di `src/i18n/dictionaries/{id,en}.ts`; kontak & nama penulis di
-  `src/config/site.ts`.
-- Bahan desain asli (logo, moodboard, sketsa) ada di `docs/design/`.
+<div align="center">
+<sub>Made with care for our planet 🌿 · © EarthSide</sub>
+</div>

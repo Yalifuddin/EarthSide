@@ -1,11 +1,12 @@
 import { Container } from "@/components/ui/container";
+import { Leaf } from "@/components/ui/leaf";
 import { Reveal } from "@/components/ui/reveal";
 import { ScallopEdge } from "@/components/ui/scallop-edge";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { SECTION_IDS } from "@/lib/routes";
-import { Leaf } from "./floating-leaves";
-import { PaperPlane, RequestForm } from "./request-form";
+import { PaperPlane } from "./paper-plane";
+import { RequestForm } from "./request-form";
 
 /** Section 3 — readers suggest topics for Della to write about. */
 export async function RequestSection() {

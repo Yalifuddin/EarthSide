@@ -10,7 +10,9 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "firebase:deploy:dev": "firebase deploy --only firestore -P development",
+    "firebase:deploy:prod": "firebase deploy --only firestore -P production"
   },
   "dependencies": {
     "@tiptap/extension-heading": "^3.31.4",

@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { AboutTrigger } from "@/components/about/about-context";
+import { Container } from "@/components/ui/container";
+import { InstagramIcon } from "@/components/ui/instagram-icon";
 import { siteConfig } from "@/config/site";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { routes, SECTION_IDS } from "@/lib/routes";
-import { Container } from "@/components/ui/container";
-import { AboutTrigger } from "@/components/landing/about-context";
 import { Logo } from "./logo";
 
 export async function Footer() {
@@ -50,9 +51,20 @@ export async function Footer() {
           <p>
             © {siteConfig.name}. {dict.footer.rights}
           </p>
-          <a href={`mailto:${siteConfig.contactEmail}`} className="hover:text-rose">
-            {siteConfig.contactEmail}
-          </a>
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            <a href={`mailto:${siteConfig.contactEmail}`} className="hover:text-rose">
+              {siteConfig.contactEmail}
+            </a>
+            <a
+              href={siteConfig.instagram.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 hover:text-rose"
+            >
+              <InstagramIcon className="size-4" />
+              {siteConfig.instagram.handle}
+            </a>
+          </div>
         </Container>
       </div>
     </footer>

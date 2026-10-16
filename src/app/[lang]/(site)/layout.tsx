@@ -1,6 +1,6 @@
-import { AboutProvider } from "@/components/landing/about-context";
+import { AboutProvider } from "@/components/about/about-context";
 import { BackToTop } from "@/components/layout/back-to-top";
-import { DemoBanner } from "@/components/layout/demo-banner";
+import { EnvironmentBanner } from "@/components/layout/environment-banner";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 
@@ -10,7 +10,7 @@ export default function SiteLayout({ children }: LayoutProps<"/[lang]">) {
     <AboutProvider>
       <Navbar />
       <main>{children}</main>
-      <DemoBanner />
+      <EnvironmentBanner />
       <Footer />
       <BackToTop />
     </AboutProvider>

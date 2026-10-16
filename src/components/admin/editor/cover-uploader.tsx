@@ -2,12 +2,12 @@
 
 import { ImageUp, RefreshCw, Trash2 } from "lucide-react";
 import { useRef, useState, type ComponentProps, type DragEvent } from "react";
+import { useAdminServices } from "@/components/admin/shell/admin-auth-provider";
 import { CoverImage } from "@/components/articles/cover-image";
 import { Spinner } from "@/components/ui/spinner";
 import { IMAGE_UPLOAD_RULES } from "@/core/media/image-uploader";
 import { useI18n } from "@/i18n/i18n-provider";
 import { cn } from "@/lib/cn";
-import { useAdminServices } from "../admin-auth-provider";
 import { describeUploadError } from "./image-errors";
 
 interface CoverUploaderProps {

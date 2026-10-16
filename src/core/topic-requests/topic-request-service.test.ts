@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { InMemoryTopicRequestRepository } from "@/infrastructure/demo/in-memory-topic-request-repository";
 import { ValidationError } from "@/core/shared/validation";
+import { InMemoryTopicRequestRepository } from "@/infrastructure/demo/in-memory-topic-request-repository";
 import { TopicRequestSubmissionService } from "./topic-request-service";
 
 describe("TopicRequestSubmissionService", () => {

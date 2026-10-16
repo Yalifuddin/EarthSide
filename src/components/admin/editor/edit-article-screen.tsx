@@ -1,12 +1,12 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { PanelEmpty, PanelError, PanelLoading } from "@/components/admin/shared/panel-state";
+import { useAdminServices } from "@/components/admin/shell/admin-auth-provider";
 import { ButtonLink } from "@/components/ui/button";
 import { useAsyncData } from "@/hooks/use-async-data";
 import { useI18n } from "@/i18n/i18n-provider";
 import { routes } from "@/lib/routes";
-import { useAdminServices } from "../admin-auth-provider";
-import { PanelEmpty, PanelError, PanelLoading } from "../panel-state";
 import { ArticleEditor } from "./article-editor";
 
 /** Reads `?id=` and opens that article (drafts included) in the editor. */

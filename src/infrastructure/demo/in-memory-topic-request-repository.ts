@@ -1,10 +1,10 @@
+import { createId } from "@/core/shared/id";
 import type {
   TopicRequest,
   TopicRequestInput,
   TopicRequestStatus,
 } from "@/core/topic-requests/topic-request";
 import type { TopicRequestRepository } from "@/core/topic-requests/topic-request-repository";
-import { createId } from "@/core/shared/id";
 
 /** Volatile repository for demo mode and tests. */
 export class InMemoryTopicRequestRepository implements TopicRequestRepository {

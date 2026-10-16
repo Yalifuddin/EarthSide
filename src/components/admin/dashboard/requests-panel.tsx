@@ -3,6 +3,10 @@
 import { Mail, Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { ActionErrorBanner, useActionError } from "@/components/admin/shared/action-error";
+import { ConfirmDialog } from "@/components/admin/shared/confirm-dialog";
+import { PanelEmpty, PanelError, PanelLoading } from "@/components/admin/shared/panel-state";
+import { useAdminServices } from "@/components/admin/shell/admin-auth-provider";
 import { Badge } from "@/components/ui/badge";
 import { inputClasses } from "@/components/ui/form-field";
 import { siteConfig } from "@/config/site";
@@ -16,10 +20,6 @@ import { formatShortDate, interpolate } from "@/i18n/format";
 import { useI18n } from "@/i18n/i18n-provider";
 import { cn } from "@/lib/cn";
 import { gmailComposeUrl } from "@/lib/gmail";
-import { useAdminServices } from "./admin-auth-provider";
-import { ConfirmDialog } from "./confirm-dialog";
-import { ActionErrorBanner, useActionError } from "./use-action-error";
-import { PanelEmpty, PanelError, PanelLoading } from "./panel-state";
 
 type StatusFilter = "all" | TopicRequestStatus;
 

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Leaf } from "@/components/landing/floating-leaves";
+import { Leaf } from "@/components/ui/leaf";
 import { cn } from "@/lib/cn";
 
 interface CoverImageProps {
@@ -43,7 +43,7 @@ export function CoverImage({ src, alt, sizes, priority, className }: CoverImageP
   );
 }
 
-export function CoverPlaceholder({ className }: { className?: string }) {
+function CoverPlaceholder({ className }: { className?: string }) {
   return (
     <div
       aria-hidden

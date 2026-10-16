@@ -10,18 +10,15 @@ import { Container } from "@/components/ui/container";
 import { useI18n } from "@/i18n/i18n-provider";
 import { routes } from "@/lib/routes";
 import { useAdminAuth } from "./admin-auth-provider";
+import { EnvironmentNotice } from "./environment-notice";
 
 export function AdminHeader() {
   const { locale, dict } = useI18n();
-  const { user, signOut, services } = useAdminAuth();
+  const { user, signOut } = useAdminAuth();
 
   return (
     <header className="sticky top-0 z-30 border-b border-forest/10 bg-cream/85 backdrop-blur-md">
-      {services.isDemo && (
-        <p className="bg-ocean px-4 py-1.5 text-center text-xs font-semibold text-cream">
-          {dict.admin.demoNotice}
-        </p>
-      )}
+      <EnvironmentNotice />
       <Container className="flex h-16 items-center justify-between gap-4">
         <Link href={routes.admin(locale)} className="flex items-center gap-3">
           <Logo className="w-10" />

@@ -17,7 +17,7 @@ export interface ImageUploader {
   upload(file: File, folder: string): Promise<string>;
 }
 
-export function assertUploadableImage(file: File): void {
+function assertUploadableImage(file: File): void {
   if (!(IMAGE_UPLOAD_RULES.acceptedTypes as readonly string[]).includes(file.type)) {
     throw new ImageRejectedError("unsupported_type");
   }

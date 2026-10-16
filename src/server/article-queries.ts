@@ -10,7 +10,7 @@ import { CACHE_TAGS } from "./cache-tags";
  * saves, so readers see new articles right away without hammering Firestore.
  */
 
-export const ARTICLES_PAGE_SIZE = 9;
+const ARTICLES_PAGE_SIZE = 9;
 
 export async function getLatestArticles(limit: number): Promise<ArticleSummary[]> {
   "use cache";

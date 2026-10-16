@@ -1,8 +1,8 @@
 "use client";
 
 import { RotateCw } from "lucide-react";
-import { Leaf } from "@/components/landing/floating-leaves";
 import { Button } from "@/components/ui/button";
+import { Leaf } from "@/components/ui/leaf";
 import { Spinner } from "@/components/ui/spinner";
 import { useI18n } from "@/i18n/i18n-provider";
 

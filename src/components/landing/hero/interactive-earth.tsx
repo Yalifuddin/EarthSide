@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useAbout } from "@/components/about/about-context";
 import { useI18n } from "@/i18n/i18n-provider";
-import { useAbout } from "./about-context";
 import { HalfEarth } from "./half-earth";
 
 /** The clickable half globe that opens "About us". */

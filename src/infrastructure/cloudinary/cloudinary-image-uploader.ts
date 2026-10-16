@@ -3,6 +3,8 @@ import type { ImageUploader } from "@/core/media/image-uploader";
 interface CloudinaryConfig {
   cloudName: string;
   uploadPreset: string;
+  /** Keeps each environment's uploads apart, e.g. "development" or "production". */
+  environment: string;
 }
 
 interface CloudinaryUploadResponse {
@@ -25,7 +27,7 @@ export class CloudinaryImageUploader implements ImageUploader {
     const body = new FormData();
     body.append("file", file);
     body.append("upload_preset", this.config.uploadPreset);
-    body.append("folder", `earthside/${folder}`);
+    body.append("folder", `earthside/${this.config.environment}/${folder}`);
 
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${this.config.cloudName}/image/upload`,

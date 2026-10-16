@@ -9,7 +9,7 @@ const dictionaries: Record<Locale, () => Promise<Dictionary>> = {
 };
 
 /** Resolves the current locale from the `[lang]` root segment (Server Components only). */
-export async function getLocale(): Promise<Locale> {
+async function getLocale(): Promise<Locale> {
   const locale = await lang();
   if (!isLocale(locale)) notFound();
   return locale;
