@@ -18,7 +18,7 @@ export function isSearchable(query: string): boolean {
 }
 
 /** Debounced archive search; ignores responses for queries the reader already moved past. */
-export function useArticleSearch(query: string): SearchState {
+export function useArticleSearch(query: string, locale: string): SearchState {
   const [state, setState] = useState<SearchState>({ status: "idle" });
   const trimmed = query.trim();
 
@@ -29,7 +29,7 @@ export function useArticleSearch(query: string): SearchState {
     const timer = setTimeout(async () => {
       setState({ status: "searching" });
       try {
-        const results = await searchPublishedArticles(trimmed);
+        const results = await searchPublishedArticles(trimmed, locale);
         if (!cancelled) setState({ status: "done", query: trimmed, results });
       } catch {
         if (!cancelled) setState({ status: "failed" });
@@ -40,7 +40,7 @@ export function useArticleSearch(query: string): SearchState {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [trimmed]);
+  }, [trimmed, locale]);
 
   return isSearchable(trimmed) ? state : { status: "idle" };
 }

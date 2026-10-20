@@ -193,6 +193,49 @@ export const en: Dictionary = {
     confirmDeleteArticle: 'Delete the article "{title}"? This can\'t be undone.',
     confirmDeleteRequest: 'Delete the request "{topic}"?',
     filterAll: "All",
+    translation: {
+      tabOriginal: "Original · {language}",
+      tabTranslation: "Translation · {language}",
+      saveFirst: "Save the article first, then its translation can be made here.",
+      states: {
+        missing: "None yet",
+        needs_review: "Needs review",
+        reviewed: "Reviewed",
+        outdated: "Needs update",
+      },
+      explain: {
+        missing:
+          "There's no {language} translation yet. {language} readers still see the original.",
+        needs_review:
+          "This translation is waiting for your review. Meanwhile {language} readers see {fallback}.",
+        reviewed: "Reviewed and shown to {language} readers.",
+        outdated:
+          "The original changed after this translation was reviewed. Readers still see the old translation — translate again or update it by hand.",
+      },
+      fallbackPrevious: "the previous translation",
+      fallbackOriginal: "the original",
+      sourceNote: "Translations are made from the last saved version of the original.",
+      autoTranslate: "Translate automatically",
+      retranslate: "Translate again",
+      writeManually: "Write manually",
+      saveDraft: "Save translation draft",
+      approve: "Mark as reviewed",
+      translating: "Translating…",
+      saving: "Saving…",
+      savedDraft: "Translation draft saved.",
+      approved: "The translation is now shown to readers.",
+      confirmRetranslate: "Translating again replaces the current translation draft. Continue?",
+      confirmRetranslateAction: "Yes, translate again",
+      unavailable:
+        "Automatic translation isn't active yet (DEEPL_API_KEY is empty). You can still write the translation by hand.",
+      errors: {
+        unauthorized: "Your sign-in session is invalid. Try signing out and in again.",
+        unavailable: "Automatic translation isn't active.",
+        invalid: "The original can't be translated (empty or too long).",
+        failed: "The translation service is having trouble. Please try again later.",
+      },
+      badge: "{language} · {state}",
+    },
     editor: {
       newTitle: "Write a new article",
       editTitle: "Edit article",
@@ -219,6 +262,7 @@ export const en: Dictionary = {
       saveDraft: "Save draft",
       publish: "Publish",
       update: "Save changes",
+      translating: "Translating…",
       saving: "Saving…",
       permissionDenied:
         "The database rules don't allow {email} to save yet. Add this email to firestore.rules, then run: firebase deploy --only firestore:rules",

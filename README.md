@@ -44,7 +44,7 @@ gets in the way of reading.
 - 🌍 **Interactive half globe** — tap it to open _About us_
 - 📰 **Latest news** up front, the full **archive** with National / International filters
 - 🔎 **Search**, **table of contents**, reading progress & reading time
-- 🇮🇩 / 🇬🇧 **Bilingual interface**, plus a badge showing each article's language
+- 🇮🇩 / 🇬🇧 **Fully bilingual** — articles follow the language the reader picks
 - 💌 **Topic requests** with email, topic and a short description
 - ♿ Accessible, responsive, and respectful of _reduced motion_
 
@@ -54,6 +54,7 @@ gets in the way of reading.
 ### For the author
 
 - ✍️ **Rich-text editor** with images, headings, quotes and links
+- 🌐 **One-click translations** (DeepL) the author reviews before they go live
 - 👀 **Preview** exactly what readers will see before publishing
 - 💾 **Drafts & local autosave** — closing the tab doesn't lose work
 - 📥 **Request inbox** with status, badges and one-click Gmail replies
@@ -86,16 +87,16 @@ limit, Cloudflare Turnstile), and page analytics.
 
 ## 🧰 Tech stack
 
-| Layer     | Choice                                                                   |
-| --------- | ------------------------------------------------------------------------ |
-| Framework | [Next.js 16](https://nextjs.org) (App Router, Cache Components, Proxy)   |
-| UI        | React 19, Tailwind CSS 4, [Motion](https://motion.dev), Lucide icons     |
-| Editor    | [Tiptap 3](https://tiptap.dev) (shared schema for editing and rendering) |
-| Data      | Firebase Firestore (Lite SDK) + security rules                           |
-| Auth      | Firebase Authentication — Google sign-in, email allow-list               |
-| Media     | Cloudinary (unsigned uploads) or Firebase Storage                        |
-| Extras    | Resend (email), Cloudflare Turnstile (anti-spam), Vercel Analytics       |
-| Quality   | TypeScript strict, Zod, Vitest, ESLint, Prettier                         |
+| Layer     | Choice                                                                      |
+| --------- | --------------------------------------------------------------------------- |
+| Framework | [Next.js 16](https://nextjs.org) (App Router, Cache Components, Proxy)      |
+| UI        | React 19, Tailwind CSS 4, [Motion](https://motion.dev), Lucide icons        |
+| Editor    | [Tiptap 3](https://tiptap.dev) (shared schema for editing and rendering)    |
+| Data      | Firebase Firestore (Lite SDK) + security rules                              |
+| Auth      | Firebase Authentication — Google sign-in, email allow-list                  |
+| Media     | Cloudinary (unsigned uploads) or Firebase Storage                           |
+| Extras    | DeepL (translation), Resend (email), Cloudflare Turnstile, Vercel Analytics |
+| Quality   | TypeScript strict, Zod, Vitest, ESLint, Prettier                            |
 
 ## 🚀 Quick start
 

@@ -9,8 +9,8 @@ const PREVIEW_COUNT = 6;
 
 /** Section 2 — the collection of Della's articles. */
 export async function ArticlesSection() {
-  const { dict } = await getDictionary();
-  const pages = await getArticlePagesByCategory(PREVIEW_COUNT);
+  const { locale, dict } = await getDictionary();
+  const pages = await getArticlePagesByCategory(locale, PREVIEW_COUNT);
 
   return (
     <section

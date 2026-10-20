@@ -12,9 +12,19 @@ interface ConfirmDialogProps {
   message: string;
   onConfirm: () => Promise<void>;
   onClose: () => void;
+  /** Defaults to the destructive "Yes, delete". */
+  confirmLabel?: string;
+  tone?: "danger" | "primary";
 }
 
-export function ConfirmDialog({ open, message, onConfirm, onClose }: ConfirmDialogProps) {
+export function ConfirmDialog({
+  open,
+  message,
+  onConfirm,
+  onClose,
+  confirmLabel,
+  tone = "danger",
+}: ConfirmDialogProps) {
   const { dict } = useI18n();
   const [pending, setPending] = useState(false);
 
@@ -42,9 +52,9 @@ export function ConfirmDialog({ open, message, onConfirm, onClose }: ConfirmDial
             <Button variant="ghost" onClick={onClose} disabled={pending}>
               {dict.admin.actions.cancel}
             </Button>
-            <Button variant="danger" onClick={confirm} disabled={pending}>
+            <Button variant={tone} onClick={confirm} disabled={pending}>
               {pending && <Spinner />}
-              {dict.admin.actions.confirmDelete}
+              {confirmLabel ?? dict.admin.actions.confirmDelete}
             </Button>
           </div>
         </div>

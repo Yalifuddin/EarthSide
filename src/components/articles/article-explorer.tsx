@@ -50,7 +50,7 @@ export function ArticleExplorer({
     if (!cursor) return;
     startLoading(async () => {
       try {
-        const next = await loadMoreArticles(filter === "all" ? null : filter, cursor);
+        const next = await loadMoreArticles(locale, filter === "all" ? null : filter, cursor);
         setPages((current) => ({
           ...current,
           [filter]: {

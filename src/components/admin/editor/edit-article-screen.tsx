@@ -20,8 +20,9 @@ function ArticleLoader({ id }: { id: string }) {
   const { articles } = useAdminServices();
   const article = useAsyncData(() => (id ? articles.getById(id) : Promise.resolve(null)));
 
-  if (article.status === "loading") return <PanelLoading />;
-  if (article.status === "error") return <PanelError onRetry={article.reload} />;
+  // Only the first load shows a spinner; reloads keep the editor (and unsaved edits) mounted.
+  if (article.status === "loading" && !article.data) return <PanelLoading />;
+  if (article.status === "error" && !article.data) return <PanelError onRetry={article.reload} />;
   if (!article.data) {
     return (
       <div className="flex flex-col items-center pb-16">
@@ -32,5 +33,5 @@ function ArticleLoader({ id }: { id: string }) {
       </div>
     );
   }
-  return <ArticleEditor article={article.data} />;
+  return <ArticleEditor article={article.data} onArticleChange={article.reload} />;
 }

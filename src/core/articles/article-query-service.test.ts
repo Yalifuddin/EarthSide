@@ -20,6 +20,8 @@ function article(title: string, category: ArticleCategory, daysAgo: number): Art
     status: "published",
     readingMinutes: 1,
     authorName: "Della",
+    textFingerprint: "",
+    translations: {},
     createdAt: date,
     updatedAt: date,
     publishedAt: date,
@@ -40,11 +42,11 @@ describe("ArticleQueryService", () => {
   });
 
   it("searches titles and excerpts, ignoring case and accents", async () => {
-    expect((await service.search("KUTUB")).map((a) => a.id)).toEqual([newerOther.id]);
-    expect((await service.search("citarúm")).map((a) => a.id)).toEqual([sameCategory.id]);
+    expect((await service.search("KUTUB", "id")).map((a) => a.id)).toEqual([newerOther.id]);
+    expect((await service.search("citarúm", "id")).map((a) => a.id)).toEqual([sameCategory.id]);
   });
 
   it("ignores queries that are too short", async () => {
-    expect(await service.search("a")).toEqual([]);
+    expect(await service.search("a", "id")).toEqual([]);
   });
 });

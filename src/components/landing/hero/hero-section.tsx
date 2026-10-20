@@ -14,8 +14,8 @@ const LATEST_COUNT = 3;
 
 /** Section 1 — title, the clickable half earth, and the newest stories. */
 export async function HeroSection() {
-  const { dict } = await getDictionary();
-  const latest = await getLatestArticles(LATEST_COUNT);
+  const { locale, dict } = await getDictionary();
+  const latest = await getLatestArticles(LATEST_COUNT, locale);
 
   return (
     <section id={SECTION_IDS.home} className="relative overflow-hidden pt-28 sm:pt-32">

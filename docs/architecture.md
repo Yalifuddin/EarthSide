@@ -61,6 +61,14 @@ edits exactly like they would with Firebase.
 links and images removed), headings get anchor ids for the table of contents, and the JSON is
 rendered to HTML with the **same extensions the editor uses** (`lib/rich-text/extensions.ts`).
 
+**Translations.** An article is written in one language and has one translation into the
+other. Saving an original whose text changed asks the `translateArticle` server action for a
+machine draft — it verifies the author's Firebase ID token first, so nobody else can spend the
+DeepL quota. Bodies are split into per-block segments with formatting kept as simple XML tags
+(`core/rich-text/translatable-text.ts`), so headings, bold text and links survive. The draft
+waits for review; readers see the last **reviewed** version (or the original if there's none),
+picked by `localizeSummary` / `localizeArticle` for the reader's locale.
+
 **Real 404s.** Once a page starts streaming its status is fixed at 200, so `proxy.ts` checks
 article slugs first (against a short-lived cache of published slugs, with a direct lookup on a
 miss) and rewrites unknown ones to a static page that answers 404.

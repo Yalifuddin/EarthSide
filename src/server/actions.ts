@@ -3,11 +3,16 @@
 import { updateTag } from "next/cache";
 import { headers } from "next/headers";
 import { publicServices } from "@/composition/public-services";
-import { isArticleCategory, type ArticleSummary } from "@/core/articles/article";
+import {
+  isArticleCategory,
+  type ArticleLanguage,
+  type ArticleSummary,
+} from "@/core/articles/article";
 import { searchArticles } from "@/core/articles/article-search";
 import type { Page } from "@/core/shared/page";
 import { ValidationError, type FieldErrors } from "@/core/shared/validation";
 import type { TopicRequestInput } from "@/core/topic-requests/topic-request";
+import { DEFAULT_LOCALE, isLocale } from "@/i18n/config";
 import { getPublishedArticles, getPublishedIndex } from "./article-queries";
 import { CACHE_TAGS } from "./cache-tags";
 
@@ -57,16 +62,30 @@ export async function submitTopicRequest({
 }
 
 /** Archive search. Runs over the cached index, so typing doesn't hit Firestore. */
-export async function searchPublishedArticles(query: string): Promise<ArticleSummary[]> {
-  return searchArticles(await getPublishedIndex(), query.slice(0, 100));
+export async function searchPublishedArticles(
+  query: string,
+  locale: string,
+): Promise<ArticleSummary[]> {
+  const language = toLanguage(locale);
+  return searchArticles(await getPublishedIndex(language), query.slice(0, 100));
 }
 
 /** "Load more" for the article archive. */
 export async function loadMoreArticles(
+  locale: string,
   category: string | null,
   cursor: string,
 ): Promise<Page<ArticleSummary>> {
-  return getPublishedArticles(isArticleCategory(category) ? category : undefined, cursor);
+  return getPublishedArticles(
+    toLanguage(locale),
+    isArticleCategory(category) ? category : undefined,
+    cursor,
+  );
+}
+
+/** Action arguments come from the browser, so the locale is re-checked here. */
+function toLanguage(locale: string): ArticleLanguage {
+  return isLocale(locale) ? locale : DEFAULT_LOCALE;
 }
 
 /**

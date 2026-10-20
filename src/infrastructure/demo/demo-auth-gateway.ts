@@ -1,5 +1,7 @@
 import type { AuthGateway, AuthUser, Unsubscribe } from "@/core/auth/auth";
 
+export const DEMO_ID_TOKEN = "demo-id-token";
+
 export const DEMO_ADMIN: AuthUser = {
   uid: "demo-admin",
   email: "demo@earthside.local",
@@ -15,6 +17,11 @@ export class DemoAuthGateway implements AuthGateway {
   async signInWithGoogle(): Promise<AuthUser> {
     this.setUser(DEMO_ADMIN);
     return DEMO_ADMIN;
+  }
+
+  /** Only accepted by the demo verifier, which runs in local development only. */
+  async getIdToken(): Promise<string | null> {
+    return this.user ? DEMO_ID_TOKEN : null;
   }
 
   async signOut(): Promise<void> {

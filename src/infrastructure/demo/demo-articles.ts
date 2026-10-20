@@ -1,4 +1,5 @@
 import type { Article, ArticleCategory } from "@/core/articles/article";
+import { fingerprintOf, toTranslatedArticle } from "@/core/articles/article-translation";
 import {
   buildExcerpt,
   estimateReadingMinutes,
@@ -33,6 +34,8 @@ interface DemoSeed {
   cover: string;
   daysAgo: number;
   content: RichTextNode;
+  /** A reviewed English version, to show bilingual articles in demo mode. */
+  english?: { title: string; content: RichTextNode };
 }
 
 const seeds: DemoSeed[] = [
@@ -42,6 +45,28 @@ const seeds: DemoSeed[] = [
     category: "national",
     cover: "/demo/mangrove.svg",
     daysAgo: 1,
+    english: {
+      title: "Why Do Mangroves Matter for Our Coasts?",
+      content: doc(
+        p(
+          "Mangroves are often dismissed as shrubs along the shore, yet these forests are one of the toughest natural defences Indonesia's coastline has. Their dense roots soften waves, hold mud in place, and are home to small fish, crabs and birds.",
+        ),
+        p(
+          "Mangroves also store large amounts of carbon in the soil they grow in. Protecting them means helping to slow down climate change, too.",
+        ),
+        h2("Why are mangroves disappearing?"),
+        p(
+          "Fish ponds, coastal construction and rubbish caught in the roots have shrunk many mangrove areas. Once they are gone, it takes years for them to grow back.",
+        ),
+        h2("What can we do?"),
+        list([
+          "Join a mangrove planting day with a local community.",
+          "Choose coastal trips that don't damage mangrove areas.",
+          "Share this with your friends!",
+        ]),
+        quote("Sample article — this content only appears in demo mode."),
+      ),
+    },
     content: doc(
       p(
         "Mangrove sering dianggap cuma semak di pinggir pantai, padahal hutan ini adalah salah satu pelindung alami paling tangguh yang dimiliki garis pantai Indonesia. Akarnya yang rapat meredam ombak, menahan lumpur, dan jadi rumah bagi ikan kecil, kepiting, dan burung.",
@@ -68,6 +93,26 @@ const seeds: DemoSeed[] = [
     category: "international",
     cover: "/demo/climate.svg",
     daysAgo: 3,
+    english: {
+      title: "The Climate Crisis in 5 Minutes: The Simplest Explanation",
+      content: doc(
+        p(
+          "Our Earth is wrapped in a layer of gases that keeps it at a comfortable temperature. The problem is that human activities such as burning coal, oil and gas thicken that blanket, trapping more of the sun's heat.",
+        ),
+        p(
+          "The result is rising average temperatures, weather that is harder to predict, and melting polar ice. This isn't one country's problem — it's a challenge for the whole world.",
+        ),
+        h2("What does it mean for us?"),
+        p(
+          "Less predictable seasons can affect harvests, access to clean water and the risk of floods in cities. The impact reaches our everyday lives.",
+        ),
+        h2("Why should young people care?"),
+        p(
+          "Because our generation will live with the impact the longest — and also has the biggest chance to change how the story ends.",
+        ),
+        quote("Sample article — this content only appears in demo mode."),
+      ),
+    },
     content: doc(
       p(
         "Bumi kita diselimuti lapisan gas yang menjaga suhunya tetap nyaman. Masalahnya, aktivitas manusia seperti membakar batu bara, minyak, dan gas menambah tebal selimut itu, sehingga panas matahari terperangkap lebih banyak.",
@@ -163,10 +208,29 @@ const seeds: DemoSeed[] = [
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+function englishTranslation(seed: DemoSeed, sourceFingerprint: string, at: Date) {
+  if (!seed.english) return {};
+  const translated = toTranslatedArticle({ ...seed.english, coverImageAlt: seed.english.title });
+  return {
+    en: {
+      published: translated,
+      draft: translated,
+      needsReview: false,
+      sourceFingerprint,
+      updatedAt: at,
+    },
+  };
+}
+
 export function createDemoArticles(now = new Date()): Article[] {
   return seeds.map((seed, index) => {
     const plainText = extractPlainText(seed.content);
     const publishedAt = new Date(now.getTime() - seed.daysAgo * DAY_MS);
+    const textFingerprint = fingerprintOf({
+      title: seed.title,
+      content: seed.content,
+      coverImageAlt: seed.title,
+    });
     return {
       id: `demo-${index + 1}`,
       slug: seed.slug,
@@ -180,6 +244,8 @@ export function createDemoArticles(now = new Date()): Article[] {
       status: "published",
       readingMinutes: estimateReadingMinutes(plainText),
       authorName: "Della",
+      textFingerprint,
+      translations: englishTranslation(seed, textFingerprint, publishedAt),
       createdAt: publishedAt,
       updatedAt: publishedAt,
       publishedAt,

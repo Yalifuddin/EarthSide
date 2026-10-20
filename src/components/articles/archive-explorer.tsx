@@ -28,9 +28,9 @@ function syncUrl(key: "category" | "q", value: string | null) {
 
 /** Search box + either search results or the category explorer. */
 export function Archive({ initialPages, initialFilter = "all", initialQuery = "" }: ArchiveProps) {
-  const { dict } = useI18n();
+  const { locale, dict } = useI18n();
   const [query, setQuery] = useState(initialQuery);
-  const search = useArticleSearch(query);
+  const search = useArticleSearch(query, locale);
 
   function changeQuery(next: string) {
     setQuery(next);

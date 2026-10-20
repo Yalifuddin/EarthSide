@@ -12,8 +12,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ArticlesPage() {
-  const { dict } = await getDictionary();
-  const pages = await getArticlePagesByCategory();
+  const { locale, dict } = await getDictionary();
+  const pages = await getArticlePagesByCategory(locale);
 
   return (
     <section className="min-h-dvh pt-36 pb-24">

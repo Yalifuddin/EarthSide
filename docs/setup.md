@@ -7,6 +7,7 @@ Everything EarthSide needs outside the code, step by step. All services have a f
 | [Firebase](https://console.firebase.google.com) — **two projects**          | Yes                      | Database, author sign-in                   |
 | [Cloudinary](https://cloudinary.com)                                        | Yes, for image uploads   | Cover and in-article images                |
 | [Vercel](https://vercel.com) + [GitHub](https://github.com)                 | Yes, to go live          | Hosting, preview deployments, analytics    |
+| [DeepL API](https://www.deepl.com/pro-api)                                  | Recommended              | Translating articles into the other language |
 | [Resend](https://resend.com)                                                | Optional                 | Email when a reader requests a topic       |
 | [Cloudflare Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) | Optional                 | Anti-spam on the request form              |
 
@@ -85,12 +86,26 @@ readers always use `earthside.contact@gmail.com` (`src/config/site.ts`), whoever
    - **Production** → the live project's values, `NEXT_PUBLIC_APP_ENV=production`,
      `NEXT_PUBLIC_SITE_URL=https://<your-domain>`
    - **Preview** → the dev project's values, `NEXT_PUBLIC_APP_ENV=preview`
-   - Mark the two secrets (`RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`) as **Sensitive**.
+   - Mark the secrets (`DEEPL_API_KEY`, `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`) as **Sensitive**.
 3. **Redeploy** after changing any `NEXT_PUBLIC_*` value — they're baked in at build time.
 4. _Analytics → Enable_ for page-view statistics.
 5. Add the production domain to the live Firebase project's _Authorized domains_.
 
-## 5. Resend — request notifications (optional)
+## 5. DeepL — article translation (recommended)
+
+Articles are written in one language and shown to readers in the language they picked. DeepL
+drafts the translation; the author reviews it before it goes live.
+
+1. Sign up at <https://www.deepl.com/pro-api> and choose **DeepL API Free** (a card may be asked
+   for verification; the free plan isn't charged).
+2. _Account → API Keys_ → copy the authentication key (free keys end in `:fx`) → `DEEPL_API_KEY`.
+3. In Vercel add it to **Production** (and **Preview** if you want to test there), marked
+   **Sensitive**, then redeploy.
+
+Without a key the dashboard still lets the author write translations by hand. Each save only
+spends quota when the original text actually changed.
+
+## 6. Resend — request notifications (optional)
 
 1. Sign up **with `earthside.contact@gmail.com`**: without a custom domain, Resend can only
    deliver to the account's own address.
@@ -99,7 +114,7 @@ readers always use `earthside.contact@gmail.com` (`src/config/site.ts`), whoever
 
 Leaving the key empty simply turns notifications off; requests still arrive in the dashboard.
 
-## 6. Cloudflare Turnstile — anti-spam (optional)
+## 7. Cloudflare Turnstile — anti-spam (optional)
 
 1. Cloudflare dashboard → _Turnstile → Add widget_, mode **Managed**.
 2. Add your domains (and `localhost` for local testing).
@@ -123,6 +138,7 @@ minutes per IP address.
 | `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`   | public config | Must be an **unsigned** preset                   |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`         | public config |                                                  |
 | `REQUEST_NOTIFY_EMAIL`, `RESEND_FROM`    | config        | Server only                                      |
+| `DEEPL_API_KEY`                          | 🔒 secret     | Server only — enables machine translation        |
 | `RESEND_API_KEY`                         | 🔒 secret     | Server only — never prefix with `NEXT_PUBLIC_`   |
 | `TURNSTILE_SECRET_KEY`                   | 🔒 secret     | Server only                                      |
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AdminShell } from "@/components/admin/shell/admin-shell";
+import { translationServices } from "@/composition/translation-services";
 import { getDictionary } from "@/i18n/get-dictionary";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -8,5 +9,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function AdminLayout({ children }: LayoutProps<"/[lang]/admin">) {
-  return <AdminShell>{children}</AdminShell>;
+  const features = { machineTranslation: translationServices.translation.isAvailable };
+  return <AdminShell features={features}>{children}</AdminShell>;
 }

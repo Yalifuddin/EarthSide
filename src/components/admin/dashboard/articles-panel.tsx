@@ -7,12 +7,14 @@ import { useState, type ReactNode } from "react";
 import { ActionErrorBanner, useActionError } from "@/components/admin/shared/action-error";
 import { ConfirmDialog } from "@/components/admin/shared/confirm-dialog";
 import { PanelEmpty, PanelError, PanelLoading } from "@/components/admin/shared/panel-state";
+import { TRANSLATION_STATE_TONE } from "@/components/admin/shared/translation-state";
 import { useAdminServices } from "@/components/admin/shell/admin-auth-provider";
 import { CategoryBadge } from "@/components/articles/category-badge";
 import { CoverImage } from "@/components/articles/cover-image";
 import { LanguageBadge } from "@/components/articles/language-badge";
 import { Badge } from "@/components/ui/badge";
 import type { ArticleSummary } from "@/core/articles/article";
+import { translationStateOf, translationTargetOf } from "@/core/articles/article-translation";
 import { useAsyncData } from "@/hooks/use-async-data";
 import { formatShortDate, interpolate } from "@/i18n/format";
 import { useI18n } from "@/i18n/i18n-provider";
@@ -112,6 +114,7 @@ function ArticleRow({ article, onToggleStatus, onDelete }: ArticleRowProps) {
           <Badge tone={isPublished ? "moss" : "muted"}>{dict.admin.status[article.status]}</Badge>
           <CategoryBadge category={article.category} dict={dict} />
           <LanguageBadge language={article.language} dict={dict} />
+          <TranslationBadge article={article} />
         </div>
         <p className="mt-2 truncate font-display text-lg text-forest">{article.title}</p>
         <p className="text-xs text-ink/55">
@@ -196,5 +199,20 @@ function IconButton({
       {children}
       <span>{label}</span>
     </button>
+  );
+}
+
+/** "English · Needs review" — what the article's translation is waiting for. */
+function TranslationBadge({ article }: { article: ArticleSummary }) {
+  const { dict } = useI18n();
+  const t = dict.admin.translation;
+  const state = translationStateOf(article);
+  return (
+    <Badge tone={TRANSLATION_STATE_TONE[state]}>
+      {interpolate(t.badge, {
+        language: dict.languages[translationTargetOf(article.language)],
+        state: t.states[state],
+      })}
+    </Badge>
   );
 }

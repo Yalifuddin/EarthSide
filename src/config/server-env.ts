@@ -12,4 +12,6 @@ export const serverEnv = {
     to: process.env.REQUEST_NOTIFY_EMAIL ?? siteConfig.contactEmail,
   },
   turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY ?? "",
+  /** DeepL API key; free-plan keys end in ":fx". Enables article translation. */
+  deeplApiKey: process.env.DEEPL_API_KEY ?? "",
 } as const;

@@ -1,13 +1,12 @@
-import type { Article, ArticleRecord, ArticleSummary } from "@/core/articles/article";
+import {
+  summarize,
+  type Article,
+  type ArticleRecord,
+  type ArticleSummary,
+} from "@/core/articles/article";
 import type { ArticleRepository, PublishedArticlesQuery } from "@/core/articles/article-repository";
 import { createId } from "@/core/shared/id";
 import type { Page } from "@/core/shared/page";
-
-function toSummary(article: Article): ArticleSummary {
-  const { content, ...summary } = article;
-  void content;
-  return summary;
-}
 
 const byPublishedDesc = (a: ArticleSummary, b: ArticleSummary) =>
   (b.publishedAt?.getTime() ?? 0) - (a.publishedAt?.getTime() ?? 0);
@@ -29,7 +28,7 @@ export class InMemoryArticleRepository implements ArticleRepository {
     const matching = [...this.articles.values()]
       .filter((a) => a.status === "published" && (!category || a.category === category))
       .filter((a) => (a.publishedAt?.getTime() ?? 0) < after)
-      .map(toSummary)
+      .map(summarize)
       .sort(byPublishedDesc);
 
     const items = matching.slice(0, limit);
@@ -48,7 +47,7 @@ export class InMemoryArticleRepository implements ArticleRepository {
 
   async listAll(): Promise<ArticleSummary[]> {
     return [...this.articles.values()]
-      .map(toSummary)
+      .map(summarize)
       .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
   }
 

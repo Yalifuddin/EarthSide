@@ -1,40 +1,49 @@
 import type { Page } from "@/core/shared/page";
-import type { Article, ArticleCategory, ArticleSummary } from "./article";
+import type { Article, ArticleCategory, ArticleLanguage, ArticleSummary } from "./article";
 import type { ArticleReader } from "./article-repository";
 import { searchArticles } from "./article-search";
+import { localizeArticle, localizeSummary } from "./article-translation";
 
 /** Upper bound for "every published article" lists (search, sitemap, slug checks). */
 const INDEX_LIMIT = 500;
 
-/** Use cases for readers: browsing and reading published articles. */
+/**
+ * Use cases for readers: browsing and reading published articles.
+ *
+ * Pass a `locale` to get each article in the reader's language (its reviewed
+ * translation when available, otherwise the original). Without one, articles
+ * come back as written — handy for language-independent jobs like sitemaps.
+ */
 export class ArticleQueryService {
   constructor(private readonly reader: ArticleReader) {}
 
-  async getLatest(limit: number): Promise<ArticleSummary[]> {
+  async getLatest(limit: number, locale?: ArticleLanguage): Promise<ArticleSummary[]> {
     const page = await this.reader.listPublished({ limit });
-    return page.items;
+    return this.localizeAll(page.items, locale);
   }
 
-  listPublished(options: {
-    category?: ArticleCategory;
-    limit: number;
-    cursor?: string | null;
-  }): Promise<Page<ArticleSummary>> {
-    return this.reader.listPublished(options);
+  async listPublished(
+    options: { category?: ArticleCategory; limit: number; cursor?: string | null },
+    locale?: ArticleLanguage,
+  ): Promise<Page<ArticleSummary>> {
+    const page = await this.reader.listPublished(options);
+    return { ...page, items: this.localizeAll(page.items, locale) };
   }
 
-  getBySlug(slug: string): Promise<Article | null> {
-    return this.reader.findPublishedBySlug(slug);
+  async getBySlug(slug: string, locale?: ArticleLanguage): Promise<Article | null> {
+    const article = await this.reader.findPublishedBySlug(slug);
+    return article && locale ? localizeArticle(article, locale) : article;
   }
 
   /** Every published article (newest first), without bodies. */
-  async getIndex(): Promise<ArticleSummary[]> {
+  async getIndex(locale?: ArticleLanguage): Promise<ArticleSummary[]> {
     const page = await this.reader.listPublished({ limit: INDEX_LIMIT });
-    return page.items;
+    return this.localizeAll(page.items, locale);
   }
 
-  async search(query: string): Promise<ArticleSummary[]> {
-    return searchArticles(await this.getIndex(), query);
+  /** Searches what the reader actually sees, i.e. in their language. */
+  async search(query: string, locale: ArticleLanguage): Promise<ArticleSummary[]> {
+    return searchArticles(await this.getIndex(locale), query);
   }
 
   /**
@@ -44,6 +53,7 @@ export class ArticleQueryService {
   async getRelated(
     article: Pick<ArticleSummary, "id" | "category">,
     limit: number,
+    locale?: ArticleLanguage,
   ): Promise<ArticleSummary[]> {
     const [sameCategory, latest] = await Promise.all([
       this.reader.listPublished({ category: article.category, limit: limit + 1 }),
@@ -58,6 +68,10 @@ export class ArticleQueryService {
       seen.add(candidate.id);
       related.push(candidate);
     }
-    return related;
+    return this.localizeAll(related, locale);
+  }
+
+  private localizeAll(items: ArticleSummary[], locale?: ArticleLanguage): ArticleSummary[] {
+    return locale ? items.map((item) => localizeSummary(item, locale)) : items;
   }
 }

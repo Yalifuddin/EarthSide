@@ -39,6 +39,10 @@ export class FirebaseAuthGateway implements AuthGateway {
     return signOut(this.auth);
   }
 
+  async getIdToken(): Promise<string | null> {
+    return (await this.auth.currentUser?.getIdToken()) ?? null;
+  }
+
   onAuthStateChanged(listener: (user: AuthUser | null) => void): Unsubscribe {
     return onAuthStateChanged(this.auth, (user) => listener(user ? toAuthUser(user) : null));
   }

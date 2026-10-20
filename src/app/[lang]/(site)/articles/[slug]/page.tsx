@@ -11,6 +11,7 @@ import { TableOfContents } from "@/components/articles/table-of-contents";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { hasTableOfContents } from "@/core/rich-text/rich-text";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { cn } from "@/lib/cn";
 import { renderRichText } from "@/lib/rich-text/render-rich-text";
@@ -21,9 +22,14 @@ type Props = PageProps<"/[lang]/articles/[slug]">;
 
 const RELATED_COUNT = 3;
 
+/** The root layout already 404s unknown locales; this just narrows the type. */
+function toLocale(lang: string): Locale {
+  return isLocale(lang) ? lang : DEFAULT_LOCALE;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+  const { slug, lang } = await params;
+  const article = await getArticleBySlug(slug, toLocale(lang));
   if (!article) return {};
 
   return {
@@ -49,13 +55,13 @@ export default function ArticlePage({ params }: Props) {
 }
 
 async function ArticleView({ params }: Pick<Props, "params">) {
-  const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+  const { slug, lang } = await params;
+  const article = await getArticleBySlug(slug, toLocale(lang));
   if (!article) notFound();
 
   const [{ locale, dict }, related] = await Promise.all([
     getDictionary(),
-    getRelatedArticles(article.id, article.category, RELATED_COUNT),
+    getRelatedArticles(article.id, article.category, RELATED_COUNT, toLocale(lang)),
   ]);
   const body = renderRichText(article.content);
 

@@ -193,6 +193,49 @@ export const id = {
     confirmDeleteArticle: 'Hapus artikel "{title}"? Tindakan ini tidak bisa dibatalkan.',
     confirmDeleteRequest: 'Hapus request "{topic}"?',
     filterAll: "Semua",
+    translation: {
+      tabOriginal: "Asli · {language}",
+      tabTranslation: "Terjemahan · {language}",
+      saveFirst: "Simpan artikel dulu, lalu terjemahannya bisa dibuat di sini.",
+      states: {
+        missing: "Belum ada",
+        needs_review: "Perlu dicek",
+        reviewed: "Sudah dicek",
+        outdated: "Perlu diperbarui",
+      },
+      explain: {
+        missing: "Belum ada terjemahan {language}. Pembaca {language} masih melihat versi asli.",
+        needs_review:
+          "Terjemahan ini menunggu kamu cek. Sementara itu pembaca {language} melihat {fallback}.",
+        reviewed: "Sudah dicek dan tampil untuk pembaca {language}.",
+        outdated:
+          "Artikel asli berubah setelah terjemahan ini dicek. Pembaca masih melihat terjemahan lama — terjemahkan ulang atau perbarui manual.",
+      },
+      fallbackPrevious: "terjemahan sebelumnya",
+      fallbackOriginal: "versi asli",
+      sourceNote: "Terjemahan dibuat dari versi asli yang terakhir disimpan.",
+      autoTranslate: "Terjemahkan otomatis",
+      retranslate: "Terjemahkan ulang",
+      writeManually: "Tulis manual",
+      saveDraft: "Simpan draf terjemahan",
+      approve: "Tandai sudah dicek",
+      translating: "Menerjemahkan…",
+      saving: "Menyimpan…",
+      savedDraft: "Draf terjemahan tersimpan.",
+      approved: "Terjemahan sudah tampil untuk pembaca.",
+      confirmRetranslate:
+        "Terjemahkan ulang akan mengganti draf terjemahan yang sekarang. Lanjutkan?",
+      confirmRetranslateAction: "Ya, terjemahkan ulang",
+      unavailable:
+        "Terjemahan otomatis belum aktif (DEEPL_API_KEY belum diisi). Kamu tetap bisa menulis terjemahan manual.",
+      errors: {
+        unauthorized: "Sesi login tidak valid. Coba keluar lalu masuk lagi.",
+        unavailable: "Terjemahan otomatis belum aktif.",
+        invalid: "Teks asli tidak bisa diterjemahkan (kosong atau terlalu panjang).",
+        failed: "Layanan terjemahan sedang bermasalah. Coba lagi nanti.",
+      },
+      badge: "{language} · {state}",
+    },
     editor: {
       newTitle: "Tulis artikel baru",
       editTitle: "Edit artikel",
@@ -219,6 +262,7 @@ export const id = {
       saveDraft: "Simpan draf",
       publish: "Terbitkan",
       update: "Simpan perubahan",
+      translating: "Menerjemahkan…",
       saving: "Menyimpan…",
       permissionDenied:
         "Akun {email} belum diizinkan menyimpan oleh aturan database. Tambahkan email ini di firestore.rules, lalu jalankan: firebase deploy --only firestore:rules",
